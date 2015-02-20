@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvUdatta" format="1">
+  <advance width="0"/>
+  <unicode hex="0951"/>
+  <outline>
+    <contour>
+      <point x="-181" y="729" type="move" name="_abvm.udatta"/>
+    </contour>
+    <contour>
+      <point x="-71" y="729" type="move" name="abvm.udatta"/>
+    </contour>
+    <contour>
+      <point x="-75" y="669" type="move" name="_abvm"/>
+    </contour>
+    <contour>
+      <point x="-75" y="669" type="move" name="_abvm.e"/>
+    </contour>
+    <contour>
+      <point x="-181" y="999" type="line"/>
+      <point x="-181" y="729" type="line"/>
+      <point x="-101" y="729" type="line"/>
+      <point x="-101" y="999" type="line"/>
+    </contour>
+  </outline>
+</glyph>

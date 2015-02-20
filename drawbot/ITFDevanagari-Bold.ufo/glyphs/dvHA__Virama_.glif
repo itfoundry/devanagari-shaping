@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvHA_Virama" format="1">
+  <advance width="500"/>
+  <outline>
+    <contour>
+      <point x="430" y="669" type="move" name="abvm"/>
+    </contour>
+    <component base="dvVirama" xOffset="409" yOffset="-117"/>
+    <component base="dvHA"/>
+  </outline>
+</glyph>

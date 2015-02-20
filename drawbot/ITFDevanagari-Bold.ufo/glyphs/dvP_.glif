@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvP" format="1">
+  <advance width="309"/>
+  <outline>
+    <contour>
+      <point x="402" y="427" type="line"/>
+      <point x="305" y="295"/>
+      <point x="251" y="287"/>
+      <point x="216" y="287" type="curve" smooth="yes"/>
+      <point x="196" y="287"/>
+      <point x="177" y="300"/>
+      <point x="177" y="324" type="curve" smooth="yes"/>
+      <point x="177" y="592" type="line"/>
+      <point x="45" y="592" type="line"/>
+      <point x="45" y="397" type="line" smooth="yes"/>
+      <point x="45" y="333"/>
+      <point x="64" y="298"/>
+      <point x="119" y="256" type="curve" smooth="yes"/>
+      <point x="171" y="216"/>
+      <point x="212" y="191"/>
+      <point x="258" y="191" type="curve" smooth="yes"/>
+      <point x="303" y="191"/>
+      <point x="345" y="204"/>
+      <point x="402" y="258" type="curve"/>
+    </contour>
+    <contour>
+      <point x="-10" y="557" type="line"/>
+      <point x="372" y="557" type="line"/>
+      <point x="372" y="573" type="line"/>
+      <point x="345" y="604" type="line"/>
+      <point x="299" y="669" type="line"/>
+      <point x="-83" y="669" type="line"/>
+      <point x="-83" y="653" type="line"/>
+      <point x="-56" y="622" type="line"/>
+    </contour>
+  </outline>
+</glyph>

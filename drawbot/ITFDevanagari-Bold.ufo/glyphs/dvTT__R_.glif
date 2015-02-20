@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvTT_R" format="1">
+  <advance width="507"/>
+  <outline>
+    <contour>
+      <point x="408" y="669" type="move" name="abvm"/>
+    </contour>
+    <component base="dvVirama" xOffset="463" yOffset="-182"/>
+    <component base="dvRashtrasign" xOffset="537" yOffset="22"/>
+    <component base="dvTTA"/>
+  </outline>
+</glyph>

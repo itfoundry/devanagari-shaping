@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvmOOE" format="1">
+  <advance width="283"/>
+  <outline>
+    <contour>
+      <point x="393" y="709" type="move" name="abvm"/>
+    </contour>
+    <component base="dvmOE" xOffset="283"/>
+    <component base="dvmAA"/>
+  </outline>
+</glyph>

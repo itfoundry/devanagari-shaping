@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvGHx_RA" format="1">
+  <advance width="657"/>
+  <outline>
+    <contour>
+      <point x="609" y="-82" type="move" name="blwm.virama"/>
+    </contour>
+    <contour>
+      <point x="595" y="-82" type="move" name="blwm.u"/>
+    </contour>
+    <component base="dvGH_RA"/>
+    <component base="dvNukta" xScale="0.872928202152" yScale="0.872928202152" xOffset="542" yOffset="120"/>
+  </outline>
+</glyph>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph format="1" name="dvmOOE">
+  <advance width="283" />
+  <outline>
+    <contour>
+      <point name="hintSet0000" type="line" x="346" y="573" />
+      <point type="line" x="319" y="604" />
+      <point type="line" x="273" y="669" />
+      <point type="line" x="208" y="669" />
+      <point type="line" x="208" y="775" />
+      <point type="line" x="144" y="813" />
+      <point type="line" x="98" y="849" />
+      <point type="line" x="75" y="849" />
+      <point type="line" x="75" y="669" />
+      <point type="line" x="-83" y="669" />
+      <point type="line" x="-83" y="653" />
+      <point type="line" x="-56" y="622" />
+      <point type="line" x="-10" y="557" />
+      <point type="line" x="75" y="557" />
+      <point type="line" x="75" y="69" />
+      <point type="line" x="139" y="31" />
+      <point type="line" x="185" y="-5" />
+      <point type="line" x="208" y="-5" />
+      <point type="line" x="208" y="557" />
+      <point type="line" x="346" y="557" />
+    </contour>
+  </outline>
+</glyph>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvDDHx" format="1">
+  <advance width="552"/>
+  <outline>
+    <contour>
+      <point x="356" y="669" type="move" name="abvm.candra"/>
+    </contour>
+    <contour>
+      <point x="468" y="669" type="move" name="abvm.e"/>
+    </contour>
+    <component base="dvVirama" xOffset="496" yOffset="-29"/>
+    <component base="dvDDHA"/>
+    <component base="dvNukta" xOffset="333" yOffset="150"/>
+  </outline>
+</glyph>

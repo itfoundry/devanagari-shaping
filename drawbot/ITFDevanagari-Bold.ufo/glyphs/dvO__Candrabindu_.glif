@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvO_Candrabindu" format="1">
+  <advance width="1024"/>
+  <outline>
+    <contour>
+      <point x="1257" y="730" type="move" name="abvm.udatta"/>
+    </contour>
+    <component base="dvmE" xOffset="1036"/>
+    <component base="dvA"/>
+    <component base="dvmAA" xOffset="741"/>
+    <component base="dvCandrabindu.aSmall" xOffset="1197" yOffset="10"/>
+  </outline>
+</glyph>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvM" format="1">
+  <advance width="297"/>
+  <outline>
+    <contour>
+      <point x="398" y="387" type="line"/>
+      <point x="202" y="387" type="line"/>
+      <point x="202" y="596" type="line"/>
+      <point x="75" y="596" type="line"/>
+      <point x="75" y="484" type="line" smooth="yes"/>
+      <point x="75" y="425"/>
+      <point x="83" y="380"/>
+      <point x="83" y="380" type="curve"/>
+      <point x="32" y="357"/>
+      <point x="30" y="343"/>
+      <point x="30" y="324" type="curve" smooth="yes"/>
+      <point x="30" y="300"/>
+      <point x="55" y="249"/>
+      <point x="136" y="176" type="curve"/>
+      <point x="202" y="176" type="line"/>
+      <point x="202" y="276" type="line"/>
+      <point x="398" y="276" type="line"/>
+    </contour>
+    <contour>
+      <point x="360" y="557" type="line"/>
+      <point x="360" y="573" type="line"/>
+      <point x="333" y="604" type="line"/>
+      <point x="287" y="669" type="line"/>
+      <point x="-83" y="669" type="line"/>
+      <point x="-83" y="653" type="line"/>
+      <point x="-56" y="622" type="line"/>
+      <point x="-10" y="557" type="line"/>
+    </contour>
+  </outline>
+</glyph>

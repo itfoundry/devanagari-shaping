@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvSHx.MAR" format="1">
+  <advance width="446"/>
+  <outline>
+    <component base="dvSH.MAR"/>
+    <component base="dvNukta" xOffset="332" yOffset="156"/>
+  </outline>
+</glyph>

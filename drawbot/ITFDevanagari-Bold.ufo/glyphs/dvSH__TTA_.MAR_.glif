@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvSH_TTA.MAR" format="1">
+  <advance width="936"/>
+  <outline>
+    <contour>
+      <point x="786" y="39" type="move" name="blwm.virama"/>
+    </contour>
+    <contour>
+      <point x="837" y="669" type="move" name="abvm"/>
+    </contour>
+    <contour>
+      <point x="787" y="25" type="move" name="blwm.u"/>
+    </contour>
+    <component base="dvTTA" xOffset="429"/>
+    <component base="dvSH.MAR"/>
+  </outline>
+</glyph>

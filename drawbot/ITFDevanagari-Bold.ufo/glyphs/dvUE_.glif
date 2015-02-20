@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvUE" format="1">
+  <advance width="741"/>
+  <outline>
+    <contour>
+      <point x="666" y="669" type="move" name="abvm"/>
+    </contour>
+    <component base="dvA"/>
+    <component base="dvmUE" xOffset="691"/>
+  </outline>
+</glyph>

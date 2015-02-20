@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvmII_Anusvara.aLong" format="1">
+  <advance width="283"/>
+  <outline>
+    <contour>
+      <point x="323" y="729" type="move" name="abvm.udatta"/>
+    </contour>
+    <component base="dvAnusvara" xScale="0.878787875175" yScale="0.876923084259" xOffset="333" yOffset="108"/>
+    <component base="dvmII.aLong"/>
+  </outline>
+</glyph>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvO_Anusvara" format="1">
+  <advance width="1024"/>
+  <outline>
+    <contour>
+      <point x="1100" y="729" type="move" name="abvm.udatta"/>
+    </contour>
+    <component base="dvmE" xOffset="1036"/>
+    <component base="dvA"/>
+    <component base="dvmAA" xOffset="741"/>
+    <component base="dvAnusvara" xScale="0.878787875175" yScale="0.876923084259" xOffset="1110" yOffset="112"/>
+  </outline>
+</glyph>

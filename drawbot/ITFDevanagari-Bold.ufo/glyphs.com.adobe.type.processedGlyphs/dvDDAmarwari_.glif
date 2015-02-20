@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph format="1" name="dvDDAmarwari">
+  <advance width="513" />
+  <outline>
+    <contour>
+      <point name="hintSet0000" type="line" x="567" y="557" />
+      <point type="line" x="567" y="573" />
+      <point type="line" x="540" y="604" />
+      <point type="line" x="494" y="669" />
+      <point type="line" x="-83" y="669" />
+      <point type="line" x="-83" y="653" />
+      <point type="line" x="-56" y="622" />
+      <point type="line" x="-10" y="557" />
+      <point type="line" x="75" y="557" />
+      <point type="line" x="75" y="484" />
+      <point x="75" y="425" />
+      <point x="83" y="380" />
+      <point type="curve" x="83" y="380" />
+      <point x="32" y="357" />
+      <point x="30" y="343" />
+      <point type="curve" x="30" y="324" />
+      <point x="30" y="300" />
+      <point x="55" y="249" />
+      <point type="curve" x="136" y="176" />
+      <point type="line" x="202" y="176" />
+      <point type="line" x="202" y="276" />
+      <point type="line" x="346" y="276" />
+      <point x="365" y="276" />
+      <point x="370" y="263" />
+      <point type="curve" x="370" y="252" />
+      <point x="370" y="171" />
+      <point x="345" y="81" />
+      <point type="curve" x="293" y="3" />
+      <point type="line" x="404" y="-57" />
+      <point x="454" y="20" />
+      <point x="481" y="94" />
+      <point type="curve" x="481" y="177" />
+      <point x="481" y="217" />
+      <point x="462" y="258" />
+      <point type="curve" x="427" y="301" />
+      <point x="388" y="348" />
+      <point x="335" y="387" />
+      <point type="curve" x="277" y="387" />
+      <point type="line" x="202" y="387" />
+      <point type="line" x="202" y="557" />
+    </contour>
+  </outline>
+</glyph>

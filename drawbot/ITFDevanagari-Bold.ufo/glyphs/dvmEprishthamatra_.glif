@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dvmEprishthamatra" format="1">
+  <advance width="301"/>
+  <outline>
+    <contour>
+      <point x="93" y="604" type="line"/>
+      <point x="93" y="69" type="line"/>
+      <point x="157" y="31" type="line"/>
+      <point x="203" y="-5" type="line"/>
+      <point x="226" y="-5" type="line"/>
+      <point x="226" y="604" type="line"/>
+    </contour>
+    <contour>
+      <point x="364" y="557" type="line"/>
+      <point x="364" y="573" type="line"/>
+      <point x="337" y="604" type="line"/>
+      <point x="291" y="669" type="line"/>
+      <point x="20" y="669" type="line"/>
+      <point x="20" y="653" type="line"/>
+      <point x="47" y="622" type="line"/>
+      <point x="93" y="557" type="line"/>
+    </contour>
+  </outline>
+</glyph>
