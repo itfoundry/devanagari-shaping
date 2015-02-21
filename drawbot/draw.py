@@ -5,6 +5,8 @@ import resources
 print "Start..."
 start = time.clock()
 
+SAVE_A_PDF_INSTEAD_OF_PNGS = True
+
 FONT_SIZE = 100
 RESIZING_FACTOR = FONT_SIZE / 1000
 MARGIN_X = FONT_SIZE * 0.05
@@ -42,24 +44,29 @@ for (
         if g_margin_r < 0:
             extension_right = abs(g_margin_r)
 
-        page_width  = extension_left + MARGIN_X + g_width + MARGIN_X + extension_right
+        page_width  = round((extension_left + MARGIN_X + g_width + MARGIN_X + extension_right) / 2) * 2
         page_height = MARGIN_Y + FONT_SIZE + MARGIN_Y
 
-        size(page_width, page_height)
-        # fill(1)
-        # rect(0, 0, width(), height())
+        newPage(page_width, page_height)
+        fill(1)
+        rect(0, 0, width(), height())
 
         origin_x = round(MARGIN_X + extension_left)
         origin_y = MARGIN_Y + DESCENDER + VERTICALLY_CENTERING_OFFSET
 
         fill(None)
-        stroke(0, 0.6, 1)
         strokeWidth(2)
-        line((origin_x, origin_y), (origin_x, origin_y + FONT_SIZE * 0.75))
-        lineDash(2, 2)
-        stroke(0, 0.5, 1)
-        boundary_right = origin_x + round(g_width)
-        line((boundary_right, origin_y), (boundary_right, origin_y + FONT_SIZE * 0.75))
+        
+        if g_width == 0:
+            stroke(1, 0.3, 0.1)
+            line((origin_x, origin_y), (origin_x, origin_y + FONT_SIZE * 0.75))
+            
+        else:
+            stroke(0.6)
+            line((origin_x, origin_y - 1), (origin_x, origin_y + 1))
+            boundary_right = round(origin_x + g_width)
+            line((boundary_right, origin_y + 1), (boundary_right, origin_y - 4))
+            line((boundary_right - 1, origin_y), (boundary_right + 4, origin_y))
 
         t = FormattedString(
             font = 'ITFDevanagari-Bold',
@@ -67,15 +74,14 @@ for (
         )
         t.appendGlyph(production_name)
         text(t, (origin_x, origin_y))
+        
+        if not SAVE_A_PDF_INSTEAD_OF_PNGS:
+            file_name = '%s-%s.png' % (str(GID).zfill(4), development_name)
+            saveImage('output/png/' + file_name)
+            newDrawing()
 
-        saveImage([
-            'output/png/%s-%s.png' % (str(GID).zfill(4), development_name),
-            'output/png-no-gid/%s.png' % development_name,
-        ])
-        
-        newDrawing()
-        
-# saveImage('output/pdf/glyphs.pdf', multipage = True)
+if SAVE_A_PDF_INSTEAD_OF_PNGS:
+    saveImage('output/pdf/glyphs.pdf', multipage = True)
 
 print "Done!"
 end = time.clock()

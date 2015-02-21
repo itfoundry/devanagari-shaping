@@ -1,1 +1,0 @@
-drawbot/output/png-no-gid/
