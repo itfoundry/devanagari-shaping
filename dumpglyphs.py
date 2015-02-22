@@ -25,79 +25,26 @@ def main():
     for font_path in get_font_paths(INPUT_PATH):
 
         tt = ttLib.TTFont(font_path)
+        fontinfo = get_fontinfo(tt)
 
-        fontinfo = {}
-
-        fontinfo['unitsPerEm'] = tt['head'].unitsPerEm
-
-        openTypeNameVersion = tt['name'].getName(
-            nameID     = 5,
-            platformID = 3,
-            platEncID  = 1,
-            langID     = 0x409,
-        )
-
-        openTypeNamePreferredFamilyName = tt['name'].getName(
-            nameID     = 16,
-            platformID = 3,
-            platEncID  = 1,
-            langID     = 0x409,
-        )
-
-        openTypeNamePreferredSubfamilyName = tt['name'].getName(
-            nameID     = 17,
-            platformID = 3,
-            platEncID  = 1,
-            langID     = 0x409,
-        )
-
-        if openTypeNamePreferredFamilyName:
-            fontinfo['familyName'] = decode_tt_string(openTypeNamePreferredFamilyName.string)
-        else:
-            fontinfo['familyName'] = decode_tt_string(tt['name'].getName(
-                nameID     = 1,
-                platformID = 3,
-                platEncID  = 1,
-                langID     = 0x409,
-            ).string)
-
-        if openTypeNamePreferredSubfamilyName:
-            fontinfo['styleName'] = decode_tt_string(openTypeNamePreferredSubfamilyName.string)
-        else:
-            fontinfo['styleName'] = decode_tt_string(tt['name'].getName(
-                nameID     = 2,
-                platformID = 3,
-                platEncID  = 1,
-                langID     = 0x409,
-            ).string)
-
-        if openTypeNameVersion and decode_tt_string(openTypeNameVersion.string).replace('.', '', 1).isalnum():
-            fontinfo['version'] = decode_tt_string(openTypeNameVersion.string)
-        else:
-            fontinfo['version'] = round(tt['head'].fontRevision, 4)
-
-        directory = os.path.join(
+        dump_directory = os.path.join(
             'dump',
             fontinfo['familyName'],
             fontinfo['styleName'],
             str(fontinfo['version']),
             str(POINT_SIZE),
         )
-
-        mkdir_p(directory)
+        mkdir_p(dump_directory)
 
         gid_string = str(gid).zfill(width_of_the_biggest_gid)
         if APPEND_THE_GLYPH_NAME:
-            name = gid_string + '.' + glyph_name + '.png'
+            dump_name = gid_string + '.' + glyph_name + '.png'
         else:
-            name = gid_string + '.png'
+            dump_name = gid_string + '.png'
 
-        with open(os.path.join(directory, name), 'w') as f:
+        with open(os.path.join(dump_directory, dump_name), 'w') as f:
             f.write('testsds')
 
-
-def decode_tt_string(tt_string):
-    return tt_string.decode('utf_16_be')
 
 def mkdir_p(directory):
     try:
@@ -141,6 +88,47 @@ def get_font_paths(input_path):
     font_paths = [i for i in font_paths if i.endswith(('.otf', '.ttf'))]
 
     return font_paths
+
+def get_nameid(tt, id, id_fallback = None):
+
+    record = tt['name'].getName(
+        nameID     = id,
+        platformID = 3,
+        platEncID  = 1,
+        langID     = 0x409,
+    )
+
+    if record:
+        content = record.string.decode('utf_16_be')
+    elif id_fallback:
+        record_fallback = tt['name'].getName(
+            nameID     = id_fallback,
+            platformID = 3,
+            platEncID  = 1,
+            langID     = 0x409,
+        )
+        content = record_fallback.string.decode('utf_16_be')
+    else:
+        content = ''
+
+    return content
+
+def get_fontinfo(tt):
+
+    fontinfo = {}
+
+    fontinfo['unitsPerEm'] = tt['head'].unitsPerEm
+
+    fontinfo['familyName'] = get_nameid(tt, 16, 1)
+    fontinfo['styleName'] = get_nameid(tt, 17, 2)
+
+    openTypeNameVersion = get_nameid(tt, 5)
+    if openTypeNameVersion.replace('.', '', 1).isalnum():
+        fontinfo['version'] = openTypeNameVersion
+    else:
+        fontinfo['version'] = round(tt['head'].fontRevision, 4)
+
+    return fontinfo
 
 
 if __name__ == '__main__':
