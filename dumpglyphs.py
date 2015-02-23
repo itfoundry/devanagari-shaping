@@ -1,146 +1,231 @@
 import os, subprocess, time
+
 from fontTools.ttLib import TTFont
 from fontTools.pens.cocoaPen import CocoaPen
 from fontTools.pens.boundsPen import BoundsPen
 
-
-# pp = pprint.PrettyPrinter(indent = 4).pprint
-
 # Options
 
-INPUT_PATH = 'input/ITFDevanagari/latest/ITFDevanagari-Bold.otf'
+INPUT_PATH = 'input/ITFDevanagari/latest/ITFDevanagari-Medium.otf'
+GOADB_PATH = 'input/ITFDevanagari/latest/GlyphOrderAndAliasDB'
 
-POINT_SIZE = 100
+FONT_SIZE = 100 # px
 APPEND_THE_GLYPH_NAME = True
-SHOW_BASELINE = False
+SHOW_BASELINE = True
 SHOW_ADVANCE = True
-LINE_WIDTH = 2 # Pixels
+STROKE_WIDTH = 2 # px
 
-ALIGN_TO_PIXELS = False
+ALIGN_TO_PIXELS = True
 
 # Rasterization options
 
-MARGIN_X = 0.05
-MARGIN_Y = 0.35
+MARGIN_HORIZONTAL = 5 # px
+LINE_HEIGHT_PERCENTAGE = 1.7
 
-VERTICALLY_CENTERING_OFFSET = -0.1
+VERTICAL_OFFSET_PERCENTAGE = -0.1
 
 # Temp
 
-gid = 123
-glyph_name = 'dvX'
 width_of_the_biggest_gid = 4
 
-# extension = [
-#     'danda',
-#     'doubledanda',
-#     'zerowidthnonjoiner',
-#     'zerowidthjoiner',
-#     'dottedcircle',
-# ]
-
 extension = [
-    'dvCandrabindu',
-    'dvAcandra',
+    'danda',
+    'doubledanda',
+    'zerowidthnonjoiner',
+    'zerowidthjoiner',
+    'dottedcircle',
 ]
+
+# extension = [
+#     'dvCandrabindu',
+#     'dvAcandra',
+#     'dvKA',
+# ]
 
 
 def main():
 
     start = time.clock()
 
-    bounds_top = []
-    bounds_bottom = []
-
     for font_path in get_font_paths(INPUT_PATH):
 
         tt = TTFont(font_path)
-        fontinfo = get_fontinfo(tt)
 
-        resizing_factor = POINT_SIZE / fontinfo['unitsPerEm']
-        baseline_height_percentage = abs(fontinfo['openTypeHheaDescender']) / (
-            fontinfo['openTypeHheaAscender'] - fontinfo['openTypeHheaDescender']
-        )
+        # Get font information
 
-        glyph_names_dict = parse_goadb('GlyphOrderAndAliasDB')
+        info = {}
+
+        info['unitsPerEm']   = tt['head'].unitsPerEm
+        info['fontRevision'] = tt['head'].fontRevision
+
+        info['openTypeHheaAscender']  = tt['hhea'].ascent
+        info['openTypeHheaDescender'] = tt['hhea'].descent
+
+        info['familyName']          = get_nameid(tt, 16, 1)
+        info['styleName']           = get_nameid(tt, 17, 2)
+        info['openTypeNameVersion'] = get_nameid(tt, 5)
+
+        if info['openTypeNameVersion'].replace('.', '', 1).isalnum():
+            info['_version'] = info['openTypeNameVersion']
+        else:
+            info['_version'] = round(info['fontRevision'], 4)
+
+        info['_ascender']  = info['openTypeHheaAscender']
+        info['_descender'] = info['openTypeHheaDescender']
+
+        for k, v in info.items():
+            print k + ':', v
+        print ''
+
+        # Derive something from font information
+
+        scale_ = FONT_SIZE / info['unitsPerEm']
+
+        baseline_height_percentage = \
+            abs(info['_descender']) / (info['_ascender'] - info['_descender'])
+
+        # Organize glyphs
+
+        glyph_names_dict = parse_goadb(GOADB_PATH)
 
         glyphs = tt.getGlyphSet()
 
+        # bounds_top = []
+        # bounds_bottom = []
+
+        glyphs_to_be_dumped = [
+            i for i in tt.getGlyphOrder()
+            if any([
+                glyph_names_dict[i].startswith('dv'),
+                glyph_names_dict[i] in extension,
+            ])
+        ]
+
         dump_directory = os.path.join(
             'dump',
-            fontinfo['familyName'],
-            fontinfo['styleName'],
-            str(fontinfo['version']),
-            str(POINT_SIZE),
+            info['familyName'],
+            info['styleName'],
+            str(info['_version']),
+            str(FONT_SIZE),
         )
         mkdir_p(dump_directory)
 
-        for gid, production_name, development_name in [
-            (tt.getGlyphID(i), i, glyph_names_dict[i])
-            for i in tt.getGlyphOrder()
-            if glyph_names_dict[i].startswith('x') or
-            glyph_names_dict[i] in extension
-        ]:
+        # Glyph loop
 
+        for production_name in glyphs_to_be_dumped:
+
+            development_name = glyph_names_dict[production_name]
+            gid = tt.getGlyphID(production_name)
             glyph = glyphs[production_name]
+
             print gid, production_name, development_name
+
+            # Get glyph metrics
+
             metrics = {}
 
             pen = BoundsPen(glyphs)
-            glyph.draw(pen)
-            metrics['lsb'] = pen.bounds[0]
-            metrics['width'] = glyph.width
-            metrics['rsb'] = glyph.width - pen.bounds[2]
-            bounds_top.append(pen.bounds[3])
-            bounds_bottom.append(pen.bounds[1])
+            glyph.draw(pen)  
+            bounds = pen.bounds
+            
+            if bounds is None:
+                bounds = [0, 0, 0, 0]
 
-            extension_left  = 0
-            extension_right = 0
+            metrics['lsb'] = bounds[0]
+            metrics['advance'] = glyph.width
+            metrics['rsb'] = glyph.width - bounds[2]
+
+            # bounds_top.append(bounds[3])
+            # bounds_bottom.append(bounds[1])
+
+            # Calculate drawing parameters
+
+            page_width = metrics['advance'] * scale_ + MARGIN_HORIZONTAL * 2
+            page_height = FONT_SIZE * LINE_HEIGHT_PERCENTAGE
+
+            lhp = LINE_HEIGHT_PERCENTAGE
+            bhp = baseline_height_percentage
+            vop = VERTICAL_OFFSET_PERCENTAGE
+            translate_ = {
+                'x': MARGIN_HORIZONTAL,
+                'y': FONT_SIZE * ((lhp - 1) / 2 + bhp + vop),
+            }
+
+            pixel_advance = metrics['advance'] * scale_
+
             if metrics['lsb'] < 0:
-                extension_left = abs(metrics['lsb'])
+                page_width += abs(metrics['lsb']) * scale_
+                translate_['x'] += abs(metrics['lsb']) * scale_
             if metrics['rsb'] < 0:
-                extension_right = abs(metrics['rsb'])
+                page_width += abs(metrics['rsb']) * scale_
 
-            page_width  = (metrics['width'] + fontinfo['unitsPerEm'] * MARGIN_X * 2 + extension_left + extension_right) * resizing_factor
-            page_height = fontinfo['unitsPerEm'] * (1 + MARGIN_Y * 2) * resizing_factor
+            if ALIGN_TO_PIXELS:
+                page_width = round(page_width / 2) * 2
+                page_height = round(page_height / 2) * 2
+                translate_['x'] = round(translate_['x'])
+                translate_['y'] = round(translate_['y'])
+                pixel_advance = round(pixel_advance)
 
-            origin_x = round(fontinfo['unitsPerEm'] * MARGIN_X + extension_left)
-            origin_y = fontinfo['unitsPerEm'] * (MARGIN_Y + baseline_height_percentage + VERTICALLY_CENTERING_OFFSET)
-
-            newPage(round(page_width / 2) * 2, page_height)
+            newPage(page_width, page_height)
+            
             fill(1)
             rect(0, 0, width(), height())
+            
+            translate(0, translate_['y'])
+            
+            fill(None)
+            strokeWidth(STROKE_WIDTH)
+            
+            if SHOW_BASELINE:
+                stroke(0.9)
+                line((0, 0), (width(), 0))
+                            
+            if SHOW_ADVANCE:
+                
+                translate(translate_['x'], 0)
+                
+                if metrics['advance'] == 0:
+                    stroke(1, 0.3, 0.1)
+                    # line((0, 0), (0, FONT_SIZE * (1 - baseline_height_percentage)))
+                    if not SHOW_BASELINE:
+                        line((-STROKE_WIDTH*2, 0), (STROKE_WIDTH*2, 0))
+                    line((0, -STROKE_WIDTH*2), (0, STROKE_WIDTH*2))
+                    
+                else:
+                    stroke(0.8)
+                    if not SHOW_BASELINE:
+                        line((0, 0 - STROKE_WIDTH/2), (0, 0 + STROKE_WIDTH/2))
+                    else:
+                        line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
+                    translate(pixel_advance, 0)
+                    if not SHOW_BASELINE:
+                        line((0 - STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
+                    line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
+                    translate(-pixel_advance, 0)
+                
+                translate(-translate_['x'], 0)
+            
+            translate(0, -translate_['y'])
 
+            translate(translate_['x'], translate_['y'])
+            scale(scale_)
+            
+            fill(0)
             pen = CocoaPen(glyphs)
             glyph.draw(pen)
-
-            scale(resizing_factor)
-            translate(origin_x, origin_y)
-            fill(0)
             drawPath(pen.path)
 
-            fill(None)
-            strokeWidth(20)
-
-            if metrics['width'] == 0:
-                stroke(1, 0.3, 0.1)
-                line((0, 0), (0, 0 + fontinfo['unitsPerEm'] * (1 - baseline_height_percentage)))
-
-            else:
-                stroke(0.6)
-                line((0, 0 - 10), (0, 10))
-                boundary_right = round((metrics['width']) * resizing_factor) / resizing_factor
-                line((boundary_right, 10), (boundary_right, -40))
-                line((boundary_right - 10, 0), (boundary_right + 40, 0))
+            scale(1/scale_)
+            translate(-translate_['x'], -translate_['y'])
 
             dump_name = str(gid).zfill(width_of_the_biggest_gid)
             if APPEND_THE_GLYPH_NAME:
                 dump_name += '.' + development_name
 
             saveImage(os.path.join(dump_directory, dump_name + '.png'))
-            # newDrawing()
+            newDrawing()
 
-        print max(bounds_top), min(bounds_bottom)
+        # print max(bounds_top), min(bounds_bottom)
 
         end = time.clock()
         print end - start, 's'
@@ -160,7 +245,7 @@ def decompose_otc(otc_path):
 
     subprocess.call(
         ['otc2otf', os.path.abspath(otc_path)],
-        cwd = directory_decomposed,
+        cwd=directory_decomposed,
     )
     otf_paths = [
         os.path.join(directory_decomposed, file_name)
@@ -189,49 +274,18 @@ def get_font_paths(input_path):
 
     return font_paths
 
-def get_nameid(tt, id, id_fallback = None):
+def get_nameid(tt, nameid, nameid_fallback=None):
 
-    record = tt['name'].getName(
-        nameID     = id,
-        platformID = 3,
-        platEncID  = 1,
-        langID     = 0x409,
-    )
+    content = ''
 
-    if record:
-        content = record.string.decode('utf_16_be')
-    elif id_fallback:
-        record_fallback = tt['name'].getName(
-            nameID     = id_fallback,
-            platformID = 3,
-            platEncID  = 1,
-            langID     = 0x409,
-        )
-        content = record_fallback.string.decode('UTF-16 BE').encode('UTF-8')
-    else:
-        content = ''
+    for nameid in nameid, nameid_fallback:
+        if nameid:
+            record = tt['name'].getName(nameid, 3, 1, 0x409)
+            if record:
+                content = record.string.decode('UTF-16BE').encode('UTF-8')
+                break
 
     return content
-
-def get_fontinfo(tt):
-
-    fontinfo = {}
-
-    fontinfo['unitsPerEm'] = tt['head'].unitsPerEm
-    fontinfo['openTypeHheaAscender'] = tt['hhea'].ascent
-    fontinfo['openTypeHheaDescender'] = tt['hhea'].descent
-
-    fontinfo['familyName'] = get_nameid(tt, 16, 1)
-    fontinfo['styleName'] = get_nameid(tt, 17, 2)
-
-    openTypeNameVersion = get_nameid(tt, 5)
-    if openTypeNameVersion.replace('.', '', 1).isalnum():
-        fontinfo['version'] = openTypeNameVersion
-    else:
-        fontinfo['version'] = round(tt['head'].fontRevision, 4)
-
-    print fontinfo
-    return fontinfo
 
 def parse_goadb(path):
 
