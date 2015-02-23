@@ -4,10 +4,14 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.cocoaPen import CocoaPen
 from fontTools.pens.boundsPen import BoundsPen
 
+# WARNING: IT TAKES AROUND 17 SECONDS TO DUMP 1000 GLYPHS
 
 # Basic options
 
+# INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
+# or a directory containing OTF/TTF/OTC/TTC files.
 INPUT_PATH = 'input/ITFDevanagari/latest/ITFDevanagari-Medium.otf'
+
 GOADB_PATH = 'input/ITFDevanagari/latest/GlyphOrderAndAliasDB'
 
 FONT_SIZE = 100 # px
