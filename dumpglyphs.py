@@ -4,30 +4,31 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.cocoaPen import CocoaPen
 from fontTools.pens.boundsPen import BoundsPen
 
-# Options
+
+# Basic options
 
 INPUT_PATH = 'input/ITFDevanagari/latest/ITFDevanagari-Medium.otf'
 GOADB_PATH = 'input/ITFDevanagari/latest/GlyphOrderAndAliasDB'
 
 FONT_SIZE = 100 # px
+
 APPEND_THE_GLYPH_NAME = True
+
+STROKE_WIDTH = 2 # px
 SHOW_BASELINE = True
 SHOW_ADVANCE = True
-STROKE_WIDTH = 2 # px
+
+# Canvas options
 
 ALIGN_TO_PIXELS = True
 
-# Rasterization options
-
 MARGIN_HORIZONTAL = 5 # px
 LINE_HEIGHT_PERCENTAGE = 1.7
-
 VERTICAL_OFFSET_PERCENTAGE = -0.1
 
 # Temp
 
 width_of_the_biggest_gid = 4
-
 extension = [
     'danda',
     'doubledanda',
@@ -35,12 +36,6 @@ extension = [
     'zerowidthjoiner',
     'dottedcircle',
 ]
-
-# extension = [
-#     'dvCandrabindu',
-#     'dvAcandra',
-#     'dvKA',
-# ]
 
 
 def main():
@@ -73,9 +68,9 @@ def main():
         info['_ascender']  = info['openTypeHheaAscender']
         info['_descender'] = info['openTypeHheaDescender']
 
-        for k, v in info.items():
-            print k + ':', v
-        print ''
+        # for k, v in info.items():
+        #     print k + ':', v
+        # print ''
 
         # Derive something from font information
 
@@ -118,16 +113,16 @@ def main():
             gid = tt.getGlyphID(production_name)
             glyph = glyphs[production_name]
 
-            print gid, production_name, development_name
+            # print gid, production_name, development_name
 
             # Get glyph metrics
 
             metrics = {}
 
             pen = BoundsPen(glyphs)
-            glyph.draw(pen)  
+            glyph.draw(pen)
             bounds = pen.bounds
-            
+
             if bounds is None:
                 bounds = [0, 0, 0, 0]
 
@@ -166,31 +161,32 @@ def main():
                 translate_['y'] = round(translate_['y'])
                 pixel_advance = round(pixel_advance)
 
+            # Draw
+
             newPage(page_width, page_height)
-            
+
             fill(1)
             rect(0, 0, width(), height())
-            
+
             translate(0, translate_['y'])
-            
+
             fill(None)
             strokeWidth(STROKE_WIDTH)
-            
+
             if SHOW_BASELINE:
                 stroke(0.9)
                 line((0, 0), (width(), 0))
-                            
+
             if SHOW_ADVANCE:
-                
+
                 translate(translate_['x'], 0)
-                
+
                 if metrics['advance'] == 0:
                     stroke(1, 0.3, 0.1)
-                    # line((0, 0), (0, FONT_SIZE * (1 - baseline_height_percentage)))
                     if not SHOW_BASELINE:
                         line((-STROKE_WIDTH*2, 0), (STROKE_WIDTH*2, 0))
                     line((0, -STROKE_WIDTH*2), (0, STROKE_WIDTH*2))
-                    
+
                 else:
                     stroke(0.8)
                     if not SHOW_BASELINE:
@@ -202,14 +198,14 @@ def main():
                         line((0 - STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
                     line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
                     translate(-pixel_advance, 0)
-                
+
                 translate(-translate_['x'], 0)
-            
+
             translate(0, -translate_['y'])
 
             translate(translate_['x'], translate_['y'])
             scale(scale_)
-            
+
             fill(0)
             pen = CocoaPen(glyphs)
             glyph.draw(pen)
@@ -295,7 +291,7 @@ def parse_goadb(path):
     glyph_names_dict = {}
 
     for line in goadb_content.splitlines():
-        content = line.partition('#')[0] # Remove comments
+        content = line.partition('#')[0]
         if content:
             parts = content.split()
             glyph_names_dict[parts[0]] = parts[1]
