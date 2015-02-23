@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="dvKx_BA" format="1">
-  <advance width="1159"/>
-  <outline>
-    <component base="dvBA" xOffset="557"/>
-    <component base="dvK"/>
-    <component base="dvNukta" xOffset="384" yOffset="177"/>
-  </outline>
-</glyph>

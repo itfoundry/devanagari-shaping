@@ -1,4 +1,6 @@
 import os
 
-for file_name in os.listdir('../drawbot/output/png/'):
-    os.symlink('../drawbot/output/png/' + file_name, file_name[5:][:-4])
+DIRECTORY = '../dump/ITF Devanagari/Medium/1.074/100/'
+
+for file_name in os.listdir(DIRECTORY):
+    os.symlink(DIRECTORY + file_name, file_name[5:][:-4])

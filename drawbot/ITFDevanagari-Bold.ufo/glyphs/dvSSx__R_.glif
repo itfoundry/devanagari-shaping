@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="dvSSx_R" format="1">
-  <advance width="328"/>
-  <outline>
-    <component base="dvSS_R"/>
-    <component base="dvNukta" xScale="0.872928202152" yScale="0.872928202152" xOffset="506" yOffset="157"/>
-  </outline>
-</glyph>

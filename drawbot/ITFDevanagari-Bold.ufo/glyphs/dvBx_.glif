@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="dvBx" format="1">
-  <advance width="354"/>
-  <outline>
-    <component base="dvNukta" xOffset="312" yOffset="209"/>
-    <component base="dvB"/>
-  </outline>
-</glyph>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="dvLLx_R" format="1">
-  <advance width="695"/>
-  <outline>
-    <component base="dvRashtrasign" xOffset="750" yOffset="60"/>
-    <component base="dvLL"/>
-    <component base="dvNukta" xOffset="368" yOffset="147"/>
-  </outline>
-</glyph>
