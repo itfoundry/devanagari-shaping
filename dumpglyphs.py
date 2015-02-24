@@ -8,8 +8,11 @@ from fontTools.pens.boundsPen import BoundsPen
 
 # Basic options
 
+TEST_MODE = True
+
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
 # or a directory containing OTF/TTF/OTC/TTC files.
+
 INPUT_PATH = 'input/ITFDevanagari/latest/ITFDevanagari-Medium.otf'
 
 GOADB_PATH = 'input/ITFDevanagari/latest/GlyphOrderAndAliasDB'
@@ -92,13 +95,16 @@ def main():
         # bounds_top = []
         # bounds_bottom = []
 
-        glyphs_to_be_dumped = [
-            i for i in tt.getGlyphOrder()
-            if any([
-                glyph_names_dict[i].startswith('dv'),
-                glyph_names_dict[i] in extension,
-            ])
-        ]
+        if TEST_MODE:
+            glyphs_to_be_dumped = ['uni0915', 'uni0948']
+        else:
+            glyphs_to_be_dumped = [
+                i for i in tt.getGlyphOrder()
+                if any([
+                    glyph_names_dict[i].startswith('dv'),
+                    glyph_names_dict[i] in extension,
+                ])
+            ]
 
         dump_directory = os.path.join(
             'dump',
@@ -171,59 +177,71 @@ def main():
 
             fill(1)
             rect(0, 0, width(), height())
-
+            
+            save()
             translate(0, translate_['y'])
-
-            fill(None)
             strokeWidth(STROKE_WIDTH)
+            fill(None)
 
             if SHOW_BASELINE:
+                
                 stroke(0.9)
+                
                 line((0, 0), (width(), 0))
 
             if SHOW_ADVANCE:
 
+                save()
                 translate(translate_['x'], 0)
 
                 if metrics['advance'] == 0:
+                    
                     stroke(1, 0.3, 0.1)
+                    
                     if not SHOW_BASELINE:
                         line((-STROKE_WIDTH*2, 0), (STROKE_WIDTH*2, 0))
                     line((0, -STROKE_WIDTH*2), (0, STROKE_WIDTH*2))
 
                 else:
+                    
                     stroke(0.8)
+                    
                     if not SHOW_BASELINE:
                         line((0, 0 - STROKE_WIDTH/2), (0, 0 + STROKE_WIDTH/2))
                     else:
                         line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
+                        
+                    save()
                     translate(pixel_advance, 0)
+                    
                     if not SHOW_BASELINE:
                         line((0 - STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
                     line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
-                    translate(-pixel_advance, 0)
+                    
+                    restore()
 
-                translate(-translate_['x'], 0)
+                restore()
 
-            translate(0, -translate_['y'])
-
+            restore()
+            
+            save()
             translate(translate_['x'], translate_['y'])
             scale(scale_)
-
             fill(0)
+            
             pen = CocoaPen(glyphs)
             glyph.draw(pen)
             drawPath(pen.path)
 
-            scale(1/scale_)
-            translate(-translate_['x'], -translate_['y'])
+            restore()
 
             dump_name = str(gid).zfill(width_of_the_biggest_gid)
             if APPEND_THE_GLYPH_NAME:
                 dump_name += '.' + development_name
 
             saveImage(os.path.join(dump_directory, dump_name + '.png'))
-            newDrawing()
+            if not TEST_MODE:
+                newDrawing()
 
         # print max(bounds_top), min(bounds_bottom)
 
