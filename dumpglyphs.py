@@ -51,6 +51,8 @@ def main():
 
     for font_path in get_font_paths(INPUT_PATH):
 
+        # Initiate the font
+
         tt = TTFont(font_path)
 
         # Get font information
@@ -75,25 +77,15 @@ def main():
         info['_ascender']  = info['openTypeHheaAscender']
         info['_descender'] = info['openTypeHheaDescender']
 
-        # for k, v in info.items():
-        #     print k + ':', v
-        # print ''
+        # Calculate the scaling factor
 
-        # Derive something from font information
-
-        scale_ = FONT_SIZE / info['unitsPerEm']
-
-        baseline_height_percentage = \
-            abs(info['_descender']) / (info['_ascender'] - info['_descender'])
+        scaling = FONT_SIZE / info['unitsPerEm']
 
         # Organize glyphs
 
         glyph_names_dict = parse_goadb(GOADB_PATH)
 
         glyphs = tt.getGlyphSet()
-
-        # bounds_top = []
-        # bounds_bottom = []
 
         if TEST_MODE:
             glyphs_to_be_dumped = ['uni0915', 'uni0948']
@@ -123,8 +115,6 @@ def main():
             gid = tt.getGlyphID(production_name)
             glyph = glyphs[production_name]
 
-            # print gid, production_name, development_name
-
             # Get glyph metrics
 
             metrics = {}
@@ -140,113 +130,86 @@ def main():
             metrics['advance'] = glyph.width
             metrics['rsb'] = glyph.width - bounds[2]
 
-            # bounds_top.append(bounds[3])
-            # bounds_bottom.append(bounds[1])
-
             # Calculate drawing parameters
 
-            page_width = metrics['advance'] * scale_ + MARGIN_HORIZONTAL * 2
+            page_width = metrics['advance'] * scaling + MARGIN_HORIZONTAL * 2
             page_height = FONT_SIZE * LINE_HEIGHT_PERCENTAGE
 
+            metrics['advance_in_px'] = metrics['advance'] * scaling
+
             lhp = LINE_HEIGHT_PERCENTAGE
-            bhp = baseline_height_percentage
             vop = VERTICAL_OFFSET_PERCENTAGE
-            translate_ = {
+            asc = info['_ascender']
+            des = abs(info['_descender'])
+            origin = {
                 'x': MARGIN_HORIZONTAL,
-                'y': FONT_SIZE * ((lhp - 1) / 2 + bhp + vop),
+                'y': FONT_SIZE * ((lhp - 1) / 2 + des / (asc + des) + vop),
             }
 
-            pixel_advance = metrics['advance'] * scale_
-
             if metrics['lsb'] < 0:
-                page_width += abs(metrics['lsb']) * scale_
-                translate_['x'] += abs(metrics['lsb']) * scale_
+                page_width += abs(metrics['lsb']) * scaling
+                origin['x'] += abs(metrics['lsb']) * scaling
             if metrics['rsb'] < 0:
-                page_width += abs(metrics['rsb']) * scale_
+                page_width += abs(metrics['rsb']) * scaling
+
+            # Rounding
 
             if ALIGN_TO_PIXELS:
                 page_width = round(page_width / 2) * 2
                 page_height = round(page_height / 2) * 2
-                translate_['x'] = round(translate_['x'])
-                translate_['y'] = round(translate_['y'])
-                pixel_advance = round(pixel_advance)
+                origin['x'] = round(origin['x'])
+                origin['y'] = round(origin['y'])
+                metrics['advance_in_px'] = round(metrics['advance_in_px'])
 
-            # Draw
+            # Initiate the page
 
             newPage(page_width, page_height)
 
-            fill(1)
-            rect(0, 0, width(), height())
-            
+            # Draw the background
+
             save()
-            translate(0, translate_['y'])
-            strokeWidth(STROKE_WIDTH)
-            fill(None)
+            fill(1)
 
-            if SHOW_BASELINE:
-                
-                stroke(0.9)
-                
-                line((0, 0), (width(), 0))
-
-            if SHOW_ADVANCE:
-
-                save()
-                translate(translate_['x'], 0)
-
-                if metrics['advance'] == 0:
-                    
-                    stroke(1, 0.3, 0.1)
-                    
-                    if not SHOW_BASELINE:
-                        line((-STROKE_WIDTH*2, 0), (STROKE_WIDTH*2, 0))
-                    line((0, -STROKE_WIDTH*2), (0, STROKE_WIDTH*2))
-
-                else:
-                    
-                    stroke(0.8)
-                    
-                    if not SHOW_BASELINE:
-                        line((0, 0 - STROKE_WIDTH/2), (0, 0 + STROKE_WIDTH/2))
-                    else:
-                        line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
-                        
-                    save()
-                    translate(pixel_advance, 0)
-                    
-                    if not SHOW_BASELINE:
-                        line((0 - STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
-                    line((0, 0 + STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
-                    
-                    restore()
-
-                restore()
+            rect(0, 0, width(), height())
 
             restore()
-            
+
+            # Draw metrics
+
             save()
-            translate(translate_['x'], translate_['y'])
-            scale(scale_)
-            fill(0)
-            
+            translate(0, origin['y'])
+            fill(None)
+            strokeWidth(STROKE_WIDTH)
+
+            draw_metrics(metrics, origin)
+
+            restore()
+
+            # Draw the glyph
+
+            save()
+            translate(origin['x'], origin['y'])
+            scale(scaling)
+
             pen = CocoaPen(glyphs)
             glyph.draw(pen)
             drawPath(pen.path)
 
             restore()
 
+            # Save the file
+
             dump_name = str(gid).zfill(width_of_the_biggest_gid)
             if APPEND_THE_GLYPH_NAME:
                 dump_name += '.' + development_name
 
             saveImage(os.path.join(dump_directory, dump_name + '.png'))
+
             if not TEST_MODE:
                 newDrawing()
 
-        # print max(bounds_top), min(bounds_bottom)
-
-        end = time.clock()
-        print end - start, 's'
+    end = time.clock()
+    print end - start, 's'
 
 
 def mkdir_p(directory):
@@ -319,6 +282,47 @@ def parse_goadb(path):
             glyph_names_dict[parts[0]] = parts[1]
 
     return glyph_names_dict
+
+def draw_metrics(metrics, origin):
+
+    if SHOW_BASELINE:
+
+        stroke(0.9)
+
+        line((0, 0), (width(), 0))
+
+    if SHOW_ADVANCE:
+
+        save()
+        translate(origin['x'], 0)
+
+        if metrics['advance'] == 0:
+
+            stroke(1, 0.3, 0.1)
+
+            if not SHOW_BASELINE:
+                line((-STROKE_WIDTH*2, 0), (STROKE_WIDTH*2, 0))
+            line((0, -STROKE_WIDTH*2), (0, STROKE_WIDTH*2))
+
+        else:
+
+            stroke(0.8)
+
+            if not SHOW_BASELINE:
+                line((0, -STROKE_WIDTH/2), (0, STROKE_WIDTH/2))
+            else:
+                line((0, STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
+
+            save()
+            translate(metrics['advance_in_px'], 0)
+
+            if not SHOW_BASELINE:
+                line((-STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
+            line((0, STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
+
+            restore()
+
+        restore()
 
 
 if __name__ == '__main__':
