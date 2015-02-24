@@ -4,45 +4,51 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.cocoaPen import CocoaPen
 from fontTools.pens.boundsPen import BoundsPen
 
-# WARNING: IT TAKES AROUND 17 SECONDS TO DUMP 1000 GLYPHS
 
-# Basic options
+# WARNING: It takes around 17 seconds to dump 1000 glyphs.
 
-TEST_MODE = True
+
+# BASIC OPTIONS
 
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
 # or a directory containing OTF/TTF/OTC/TTC files.
 
-INPUT_PATH = 'input/ITFDevanagari/latest/ITFDevanagari-Medium.otf'
+INPUT_PATH = 'input/ITFDevanagari/latest'
 
 GOADB_PATH = 'input/ITFDevanagari/latest/GlyphOrderAndAliasDB'
 
 FONT_SIZE = 100 # px
 
+ZERO_PADDING_WIDTH = 4
 APPEND_THE_GLYPH_NAME = True
 
 STROKE_WIDTH = 2 # px
 SHOW_BASELINE = True
 SHOW_ADVANCE = True
 
-# Canvas options
-
-ALIGN_TO_PIXELS = True
-
-MARGIN_HORIZONTAL = 5 # px
-LINE_HEIGHT_PERCENTAGE = 1.7
-VERTICAL_OFFSET_PERCENTAGE = -0.1
-
-# Temp
-
-width_of_the_biggest_gid = 4
-extension = [
+GENERAL_GLYPHS = [
     'danda',
     'doubledanda',
     'zerowidthnonjoiner',
     'zerowidthjoiner',
     'dottedcircle',
 ]
+
+TEST_MODE = False
+TEST_MODE_GLYPHS = [
+    'dvKA',
+    'dvCandrabindu',
+]
+
+
+# CANVAS OPTIONS
+
+ALIGN_TO_PIXELS = True
+
+LINE_HEIGHT_PERCENTAGE = 1.7
+
+MARGIN_HORIZONTAL = 5 # px
+VERTICAL_OFFSET_PERCENTAGE = -0.1
 
 
 def main():
@@ -53,21 +59,21 @@ def main():
 
         # Initiate the font
 
-        tt = TTFont(font_path)
+        font = TTFont(font_path)
 
         # Get font information
 
         info = {}
 
-        info['unitsPerEm']   = tt['head'].unitsPerEm
-        info['fontRevision'] = tt['head'].fontRevision
+        info['unitsPerEm']   = font['head'].unitsPerEm
+        info['fontRevision'] = font['head'].fontRevision
 
-        info['openTypeHheaAscender']  = tt['hhea'].ascent
-        info['openTypeHheaDescender'] = tt['hhea'].descent
+        info['openTypeHheaAscender']  = font['hhea'].ascent
+        info['openTypeHheaDescender'] = font['hhea'].descent
 
-        info['familyName']          = get_nameid(tt, 16, 1)
-        info['styleName']           = get_nameid(tt, 17, 2)
-        info['openTypeNameVersion'] = get_nameid(tt, 5)
+        info['familyName']          = get_nameid(font, 16, 1)
+        info['styleName']           = get_nameid(font, 17, 2)
+        info['openTypeNameVersion'] = get_nameid(font, 5)
 
         if info['openTypeNameVersion'].replace('.', '', 1).isalnum():
             info['_version'] = info['openTypeNameVersion']
@@ -81,22 +87,7 @@ def main():
 
         scaling = FONT_SIZE / info['unitsPerEm']
 
-        # Organize glyphs
-
-        glyph_names_dict = parse_goadb(GOADB_PATH)
-
-        glyphs = tt.getGlyphSet()
-
-        if TEST_MODE:
-            glyphs_to_be_dumped = ['uni0915', 'uni0948']
-        else:
-            glyphs_to_be_dumped = [
-                i for i in tt.getGlyphOrder()
-                if any([
-                    glyph_names_dict[i].startswith('dv'),
-                    glyph_names_dict[i] in extension,
-                ])
-            ]
+        # Prepare the directory
 
         dump_directory = os.path.join(
             'dump',
@@ -107,21 +98,44 @@ def main():
         )
         mkdir_p(dump_directory)
 
+        # Initiate the glyph set
+
+        glyphs = font.getGlyphSet()
+
+        # Get concerned glyphs
+
+        names_p2d_map = parse_goadb(GOADB_PATH)
+
+        glyphs_concerned = []
+
+        if TEST_MODE:
+            names_d2p_map = {v: k for k, v in names_p2d_map.items()}
+            for name_d in TEST_MODE_GLYPHS:
+                name_p = names_d2p_map[name_d]
+                gid = font.getGlyphID(name_p)
+                glyphs_concerned.append((gid, name_p, name_d))
+        else:
+            for gid, name_p in enumerate(font.getGlyphOrder()):
+                name_d = names_p2d_map[name_p]
+                if name_d.startswith('dv') or (name_d in GENERAL_GLYPHS):
+                    glyphs_concerned.append((gid, name_p, name_d))
+
         # Glyph loop
 
-        for production_name in glyphs_to_be_dumped:
+        for gid, name_p, name_d in glyphs_concerned:
 
-            development_name = glyph_names_dict[production_name]
-            gid = tt.getGlyphID(production_name)
-            glyph = glyphs[production_name]
+            glyph = glyphs[name_p]
+
+            if not TEST_MODE:
+                newDrawing()
 
             # Get glyph metrics
 
             metrics = {}
 
-            pen = BoundsPen(glyphs)
-            glyph.draw(pen)
-            bounds = pen.bounds
+            pen_bounds = BoundsPen(glyphs)
+            glyph.draw(pen_bounds)
+            bounds = pen_bounds.bounds
 
             if bounds is None:
                 bounds = [0, 0, 0, 0]
@@ -191,22 +205,19 @@ def main():
             translate(origin['x'], origin['y'])
             scale(scaling)
 
-            pen = CocoaPen(glyphs)
-            glyph.draw(pen)
-            drawPath(pen.path)
+            pen_path = CocoaPen(glyphs)
+            glyph.draw(pen_path)
+            drawPath(pen_path.path)
 
             restore()
 
             # Save the file
 
-            dump_name = str(gid).zfill(width_of_the_biggest_gid)
+            dump_name = str(gid).zfill(ZERO_PADDING_WIDTH)
             if APPEND_THE_GLYPH_NAME:
-                dump_name += '.' + development_name
+                dump_name += '.' + name_d
 
             saveImage(os.path.join(dump_directory, dump_name + '.png'))
-
-            if not TEST_MODE:
-                newDrawing()
 
     end = time.clock()
     print end - start, 's'
@@ -255,13 +266,13 @@ def get_font_paths(input_path):
 
     return font_paths
 
-def get_nameid(tt, nameid, nameid_fallback=None):
+def get_nameid(font, nameid, nameid_fallback=None):
 
     content = ''
 
     for nameid in nameid, nameid_fallback:
         if nameid:
-            record = tt['name'].getName(nameid, 3, 1, 0x409)
+            record = font['name'].getName(nameid, 3, 1, 0x409)
             if record:
                 content = record.string.decode('UTF-16BE').encode('UTF-8')
                 break
@@ -273,15 +284,15 @@ def parse_goadb(path):
     with open(path, 'r') as f:
         goadb_content = f.read()
 
-    glyph_names_dict = {}
+    names_p2d_map = {}
 
     for line in goadb_content.splitlines():
         content = line.partition('#')[0]
         if content:
             parts = content.split()
-            glyph_names_dict[parts[0]] = parts[1]
+            names_p2d_map[parts[0]] = parts[1]
 
-    return glyph_names_dict
+    return names_p2d_map
 
 def draw_metrics(metrics, origin):
 
