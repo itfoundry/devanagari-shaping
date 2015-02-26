@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os, subprocess, time
 
 from fontTools.ttLib import TTFont
@@ -313,6 +315,7 @@ def draw_metrics(metrics, origin):
 
             if not SHOW_BASELINE:
                 line((-STROKE_WIDTH*2, 0), (STROKE_WIDTH*2, 0))
+
             line((0, -STROKE_WIDTH*2), (0, STROKE_WIDTH*2))
 
         else:
@@ -329,6 +332,7 @@ def draw_metrics(metrics, origin):
 
             if not SHOW_BASELINE:
                 line((-STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
+
             line((0, STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
 
             restore()
