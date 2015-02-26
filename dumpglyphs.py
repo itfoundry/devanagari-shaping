@@ -1,14 +1,30 @@
 #!/usr/bin/python
 
+from __future__ import division
+
 import os, subprocess, time
 
 from fontTools.ttLib import TTFont
 from fontTools.pens.cocoaPen import CocoaPen
 from fontTools.pens.boundsPen import BoundsPen
 
+try:
+    import drawBot
+except ImportError:
+    in_drawbot = False
+else:
+    in_drawbot = True
+
 
 # WARNING: It takes around 17 seconds to dump 1000 glyphs.
 
+# TEST MODE?
+
+TEST_MODE = False
+TEST_MODE_GLYPHS = [  # Specified in development glyph names
+    'dvCandrabindu',
+    'dvKA',
+]
 
 # BASIC OPTIONS
 
@@ -28,20 +44,13 @@ STROKE_WIDTH = 2 # px
 SHOW_BASELINE = True
 SHOW_ADVANCE = True
 
-GENERAL_GLYPHS = [
+GENERAL_GLYPHS = [  # Specified in development glyph names
     'danda',
     'doubledanda',
     'zerowidthnonjoiner',
     'zerowidthjoiner',
     'dottedcircle',
 ]
-
-TEST_MODE = False
-TEST_MODE_GLYPHS = [
-    'dvKA',
-    'dvCandrabindu',
-]
-
 
 # CANVAS OPTIONS
 
@@ -54,8 +63,6 @@ VERTICAL_OFFSET_PERCENTAGE = -0.1
 
 
 def main():
-
-    start = time.clock()
 
     for font_path in get_font_paths(INPUT_PATH):
 
@@ -89,6 +96,19 @@ def main():
 
         scaling = FONT_SIZE / info['unitsPerEm']
 
+        # Calculate some basic drawing parameters
+
+        page_height_raw = FONT_SIZE * LINE_HEIGHT_PERCENTAGE
+
+        lhp = LINE_HEIGHT_PERCENTAGE
+        vop = VERTICAL_OFFSET_PERCENTAGE
+        asc = info['_ascender']
+        des = abs(info['_descender'])
+        origin_raw = {
+            'x': MARGIN_HORIZONTAL,
+            'y': FONT_SIZE * ((lhp - 1) / 2 + des / (asc + des) + vop),
+        }
+
         # Prepare the directory
 
         dump_directory = os.path.join(
@@ -115,25 +135,21 @@ def main():
             for name_d in TEST_MODE_GLYPHS:
                 name_p = names_d2p_map[name_d]
                 gid = font.getGlyphID(name_p)
-                glyphs_concerned.append((gid, name_p, name_d))
+                glyph = glyphs[name_p]
+                glyphs_concerned.append([glyph, gid, name_p, name_d])
         else:
             for gid, name_p in enumerate(font.getGlyphOrder()):
                 name_d = names_p2d_map[name_p]
+                glyph = glyphs[name_p]
                 if name_d.startswith('dv') or (name_d in GENERAL_GLYPHS):
-                    glyphs_concerned.append((gid, name_p, name_d))
+                    glyphs_concerned.append([glyph, gid, name_p, name_d])
 
-        # Glyph loop
+        # Glyph metrics loop
 
-        for gid, name_p, name_d in glyphs_concerned:
+        bounds_top = []
+        bounds_bottom = []
 
-            glyph = glyphs[name_p]
-
-            if not TEST_MODE:
-                newDrawing()
-
-            # Get glyph metrics
-
-            metrics = {}
+        for i, (glyph, gid, name_p, name_d) in enumerate(glyphs_concerned):
 
             pen_bounds = BoundsPen(glyphs)
             glyph.draw(pen_bounds)
@@ -142,31 +158,68 @@ def main():
             if bounds is None:
                 bounds = [0, 0, 0, 0]
 
-            metrics['lsb'] = bounds[0]
-            metrics['advance'] = glyph.width
-            metrics['rsb'] = glyph.width - bounds[2]
+            lsb = bounds[0]
+            advance = glyph.width
+            rsb = glyph.width - bounds[2]
+
+            bounds_top.append(bounds[3])
+            bounds_bottom.append(bounds[1])
+
+            glyphs_concerned[i].extend([lsb, advance, rsb])
+
+        # Check if clipping will happen
+
+        stretch_top = max(bounds_top) * scaling
+        stretch_bottom = abs(min(bounds_bottom) * scaling)
+
+        canvas_space_top = FONT_SIZE * LINE_HEIGHT_PERCENTAGE - origin_raw['y']
+        canvas_space_bottom = origin_raw['y']
+
+        print '{familyName}, {styleName}:'.format(**info)
+
+        if any([
+            stretch_top > canvas_space_top,
+            stretch_bottom > canvas_space_bottom
+        ]) :
+            print '[WARNING] Some glyphs will be clipped by the canvas.'
+            print '  Font size:       ', FONT_SIZE
+            print '  Line height:     ', FONT_SIZE * LINE_HEIGHT_PERCENTAGE
+            print '* Canvas bounds:   ', canvas_space_top, -canvas_space_bottom
+            print '* Outline extremes:', stretch_top, -stretch_bottom
+            print '[BREAK OUT]'
+            break
+
+        else:
+            print '[Note] The line height {} is large enough.'.format(
+                FONT_SIZE * LINE_HEIGHT_PERCENTAGE
+            )
+
+        print ''
+
+        # Glyph drawing loop
+
+        for glyph, gid, name_p, name_d, lsb, advance, rsb in glyphs_concerned:
+
+            # Genrate the file name
+
+            dump_name = str(gid).zfill(ZERO_PADDING_WIDTH)
+            if APPEND_THE_GLYPH_NAME:
+                dump_name += '.' + name_d
 
             # Calculate drawing parameters
 
-            page_width = metrics['advance'] * scaling + MARGIN_HORIZONTAL * 2
-            page_height = FONT_SIZE * LINE_HEIGHT_PERCENTAGE
+            page_width = advance * scaling + MARGIN_HORIZONTAL * 2
+            page_height = page_height_raw
 
-            metrics['advance_in_px'] = metrics['advance'] * scaling
+            advance_in_px = advance * scaling
 
-            lhp = LINE_HEIGHT_PERCENTAGE
-            vop = VERTICAL_OFFSET_PERCENTAGE
-            asc = info['_ascender']
-            des = abs(info['_descender'])
-            origin = {
-                'x': MARGIN_HORIZONTAL,
-                'y': FONT_SIZE * ((lhp - 1) / 2 + des / (asc + des) + vop),
-            }
+            origin = origin_raw.copy()
 
-            if metrics['lsb'] < 0:
-                page_width += abs(metrics['lsb']) * scaling
-                origin['x'] += abs(metrics['lsb']) * scaling
-            if metrics['rsb'] < 0:
-                page_width += abs(metrics['rsb']) * scaling
+            if lsb < 0:
+                page_width += abs(lsb) * scaling
+                origin['x'] += abs(lsb) * scaling
+            if rsb < 0:
+                page_width += abs(rsb) * scaling
 
             # Rounding
 
@@ -175,54 +228,56 @@ def main():
                 page_height = round(page_height / 2) * 2
                 origin['x'] = round(origin['x'])
                 origin['y'] = round(origin['y'])
-                metrics['advance_in_px'] = round(metrics['advance_in_px'])
+                advance_in_px = round(advance_in_px)
 
-            # Initiate the page
+            # Draw and save
 
-            newPage(page_width, page_height)
+            if in_drawbot:
 
-            # Draw the background
+                # Initiate the canvas
 
-            save()
-            fill(1)
+                newPage(page_width, page_height)
 
-            rect(0, 0, width(), height())
+                # Draw the background
 
-            restore()
+                save()
+                fill(1)
 
-            # Draw metrics
+                rect(0, 0, width(), height())
 
-            save()
-            translate(0, origin['y'])
-            fill(None)
-            strokeWidth(STROKE_WIDTH)
+                restore()
 
-            draw_metrics(metrics, origin)
+                # Draw metrics
 
-            restore()
+                save()
+                translate(origin['x'], origin['y'])
+                fill(None)
+                strokeWidth(STROKE_WIDTH)
 
-            # Draw the glyph
+                draw_metrics(advance, advance_in_px, origin)
 
-            save()
-            translate(origin['x'], origin['y'])
-            scale(scaling)
+                restore()
 
-            pen_path = CocoaPen(glyphs)
-            glyph.draw(pen_path)
-            drawPath(pen_path.path)
+                # Draw the glyph
 
-            restore()
+                save()
+                translate(origin['x'], origin['y'])
+                scale(scaling)
 
-            # Save the file
+                pen_path = CocoaPen(glyphs)
+                glyph.draw(pen_path)
+                drawPath(pen_path.path)
 
-            dump_name = str(gid).zfill(ZERO_PADDING_WIDTH)
-            if APPEND_THE_GLYPH_NAME:
-                dump_name += '.' + name_d
+                restore()
 
-            saveImage(os.path.join(dump_directory, dump_name + '.png'))
+                # Save the file
 
-    end = time.clock()
-    print end - start, 's'
+                saveImage(os.path.join(dump_directory, dump_name + '.png'))
+
+                # Clear the canvas
+
+                if not TEST_MODE:
+                    newDrawing()
 
 
 def mkdir_p(directory):
@@ -296,20 +351,22 @@ def parse_goadb(path):
 
     return names_p2d_map
 
-def draw_metrics(metrics, origin):
+def draw_metrics(advance, advance_in_px, origin):
 
     if SHOW_BASELINE:
+
+        save()
+        translate(-origin['x'], 0)
 
         stroke(0.9)
 
         line((0, 0), (width(), 0))
 
+        restore()
+
     if SHOW_ADVANCE:
 
-        save()
-        translate(origin['x'], 0)
-
-        if metrics['advance'] == 0:
+        if advance == 0:
 
             stroke(1, 0.3, 0.1)
 
@@ -328,7 +385,7 @@ def draw_metrics(metrics, origin):
                 line((0, STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
 
             save()
-            translate(metrics['advance_in_px'], 0)
+            translate(advance_in_px, 0)
 
             if not SHOW_BASELINE:
                 line((-STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
@@ -337,8 +394,9 @@ def draw_metrics(metrics, origin):
 
             restore()
 
-        restore()
-
 
 if __name__ == '__main__':
+    start = time.clock()
     main()
+    end = time.clock()
+    print end - start, 's'
