@@ -1,11 +1,5 @@
-#!opentype
-
 .notdef .notdef
-NULL NULL uni0000
-CR CR uni000D
 space space uni0020
-
-# Vowel letters
 
 uni0905 dvA uni0905
 uni0906 dvAA uni0906
@@ -21,11 +15,18 @@ uni090F dvE uni090F
 uni0910 dvAI uni0910
 uni0913 dvO uni0913
 uni0914 dvAU uni0914
-uni090D dvEcandra uni090D
-uni0972 dvAcandra uni0972
-uni0911 dvOcandra uni0911
 
-# Matras
+uni0972 dvAcandra uni0972
+uni090D dvEcandra uni090D
+uni0911 dvOcandra uni0911
+uni0904 dvAshort uni0904
+uni090E dvEshort uni090E
+uni0912 dvOshort uni0912
+uni0976 dvUE uni0976
+uni0977 dvUUE uni0977
+uni0973 dvOE uni0973
+uni0974 dvOOE uni0974
+uni0975 dvAW uni0975
 
 uni093E dvmAA uni093E
 uni093F dvmI uni093F
@@ -40,22 +41,9 @@ uni0947 dvmE uni0947
 uni0948 dvmAI uni0948
 uni094B dvmO uni094B
 uni094C dvmAU uni094C
+
 uni0945 dvmEcandra uni0945
 uni0949 dvmOcandra uni0949
-
-# Vowel letters: extra
-
-uni090E dvEshort uni090E
-uni0904 dvAshort uni0904
-uni0912 dvOshort uni0912
-uni0976 dvUE uni0976
-uni0977 dvUUE uni0977
-uni0973 dvOE uni0973
-uni0974 dvOOE uni0974
-uni0975 dvAW uni0975
-
-# Matras: extra
-
 uni0946 dvmEshort uni0946
 uni094A dvmOshort uni094A
 uni0956 dvmUE uni0956
@@ -65,8 +53,6 @@ uni093B dvmOOE uni093B
 uni094F dvmAW uni094F
 uni094E dvmEprishthamatra uni094E
 uni0955 dvmEcandralong uni0955
-
-# Consonant letters: basic
 
 uni0915 dvKA uni0915
 uni0916 dvKHA uni0916
@@ -106,8 +92,6 @@ uni0933 dvLLA uni0933
 uni0915094D0937 dvK_SSA
 uni091C094D091E dvJ_NYA
 
-# Consonant letters: nukta
-
 uni0915093C dvKxA uni0958
 uni0916093C dvKHxA uni0959
 uni0917093C dvGxA uni095A
@@ -143,7 +127,59 @@ uni0938093C dvSxA
 uni0939093C dvHxA
 uni0933093C dvLLxA uni0934
 
-# Consonant letters: half
+uni097B dvGAbar uni097B
+uni097C dvJAbar uni097C
+uni097E dvDDAbar uni097E
+uni097F dvBAbar uni097F
+uni0979 dvZHA uni0979
+uni097A dvYAheavy uni097A
+uni0978 dvDDAmarwari uni0978
+
+uni0902 dvAnusvara uni0902
+uni0901 dvCandrabindu uni0901
+uni0903 dvVisarga uni0903
+uni093D dvAvagraha uni093D
+uni094D dvVirama uni094D
+uni093C dvNukta uni093C
+
+uni0951 udatta uni0951
+uni0952 anudatta uni0952
+
+uni0953 dvGrave uni0953
+uni0954 dvAcute uni0954
+uni0971 dvHighspacingdot uni0971
+uni097D dvGlottalstop uni097D
+uni0900 dvCandrabinduinverted uni0900
+
+uni0966 dvZero uni0966
+uni0967 dvOne uni0967
+uni0968 dvTwo uni0968
+uni0969 dvThree uni0969
+uni096A dvFour uni096A
+uni096B dvFive uni096B
+uni096C dvSix uni096C
+uni096D dvSeven uni096D
+uni096E dvEight uni096E
+uni096F dvNine uni096F
+
+uni0950 dvOm uni0950
+uni0970 dvAbbreviationsign uni0970
+
+uni0964 danda uni0964
+uni0965 doubledanda uni0965
+
+uni20A8 rupee uni20A8
+uni20B9 indianrupee uni20B9
+
+uni200C zerowidthnonjoiner uni200C
+uni200D zerowidthjoiner uni200D
+uni25CC dottedcircle uni25CC
+
+ITF ITF
+
+uni0930094D.reph dvReph
+uni0930094D200D dvEyelash
+uni094D0930 dvRakar
 
 uni0915094D dvK
 uni0916094D dvKH
@@ -183,8 +219,6 @@ uni0933094D dvLL
 uni0915094D0937094D dvK_SS
 uni091C094D091E094D dvJ_NY
 
-# Consonant letters: half nukta
-
 uni0915093C094D dvKx
 uni0916093C094D dvKHx
 uni0917093C094D dvGx
@@ -220,80 +254,6 @@ uni0938093C094D dvSx
 uni0939093C094D dvHx
 uni0933093C094D dvLLx
 
-# Consonant letters: extra
-
-uni097B dvGAbar uni097B
-uni097C dvJAbar uni097C
-uni097E dvDDAbar uni097E
-uni097F dvBAbar uni097F
-uni0979 dvZHA uni0979
-uni097A dvYAheavy uni097A
-uni0978 dvDDAmarwari uni0978
-
-# Phonological marks
-
-uni0902 dvAnusvara uni0902
-uni0901 dvCandrabindu uni0901
-uni0903 dvVisarga uni0903
-uni093D dvAvagraha uni093D
-uni094D dvVirama uni094D
-uni093C dvNukta uni093C
-
-# Phonological marks: extra
-
-uni097D dvGlottalstop uni097D
-uni0971 dvHighspacingdot uni0971
-uni0951 dvUdatta uni0951
-uni0952 dvAnudatta uni0952
-uni0953 dvGrave uni0953
-uni0954 dvAcute uni0954
-uni0900 dvCandrabinduinverted uni0900
-
-# Digits
-
-uni0966 dvZero uni0966
-uni0967 dvOne uni0967
-uni0968 dvTwo uni0968
-uni0969 dvThree uni0969
-uni096A dvFour uni096A
-uni096B dvFive uni096B
-uni096C dvSix uni096C
-uni096D dvSeven uni096D
-uni096E dvEight uni096E
-uni096F dvNine uni096F
-
-# Additional signs
-
-uni0950 dvOm uni0950
-uni0970 dvAbbreviationsign uni0970
-uni0964 danda uni0964
-uni0965 doubledanda uni0965
-
-# Miscellaneous
-
-uni20A8 rupee uni20A8
-uni20B9 indianrupee uni20B9
-uni02BC apostrophemod uni02BC
-
-uni200B zerowidthspace uni200B
-uni200C zerowidthnonjoiner uni200C
-uni200D zerowidthjoiner uni200D
-uni25CC dottedcircle uni25CC
-
-# ---
-
-itfLogo itfLogo
-
-# ---
-
-# RA variants
-
-uni0930094D.reph dvReph
-uni0930094D200D dvEyelash
-uni094D0930 dvRashtrasign
-
-# Consonant letters: vattu
-
 uni0915094D0930 dvK_RA
 uni0916094D0930 dvKH_RA
 uni0917094D0930 dvG_RA
@@ -322,13 +282,14 @@ uni092E094D0930 dvM_RA
 uni092F094D0930 dvY_RA
 uni0932094D0930 dvL_RA
 uni0935094D0930 dvV_RA
-uni0937094D0930 dvSS_RA
 uni0936094D0930 dvSH_RA
+uni0937094D0930 dvSS_RA
 uni0938094D0930 dvS_RA
 uni0939094D0930 dvH_RA
 uni0933094D0930 dvLL_RA
 
-# Consonant letters: vattu nukta
+uni0915094D0937094D0930 dvK_SS_RA
+uni091C094D091E094D0930 dvJ_NY_RA
 
 uni0915093C094D0930 dvKx_RA
 uni0916093C094D0930 dvKHx_RA
@@ -364,8 +325,6 @@ uni0938093C094D0930 dvSx_RA
 uni0939093C094D0930 dvHx_RA
 uni0933093C094D0930 dvLLx_RA
 
-# Consonant letters: half vattu
-
 uni0915094D0930094D dvK_R
 uni0916094D0930094D dvKH_R
 uni0917094D0930094D dvG_R
@@ -400,7 +359,8 @@ uni0938094D0930094D dvS_R
 uni0939094D0930094D dvH_R
 uni0933094D0930094D dvLL_R
 
-# Consonant letters: half vattu nukta
+uni0915094D0937094D0930094D dvK_SS_R
+uni091C094D091E094D0930094D dvJ_NY_R
 
 uni0915093C094D0930094D dvKx_R
 uni0916093C094D0930094D dvKHx_R
@@ -435,8 +395,6 @@ uni0937093C094D0930094D dvSSx_R
 uni0938093C094D0930094D dvSx_R
 uni0939093C094D0930094D dvHx_R
 uni0933093C094D0930094D dvLLx_R
-
-# Consonant conjuncts
 
 uni0915094D0915 dvK_KA
 uni0915093C094D0915093C dvKx_KxA
@@ -637,12 +595,17 @@ uni0926094D0917094D0930 dvD_G_RA
 uni0926094D0918 dvD_GHA
 uni0926094D0926 dvD_DA
 uni0926094D0927 dvD_DHA
+uni0926094D0927094D092F dvD_DH_YA
+uni0926094D0928 dvD_NA
 uni0926094D092C dvD_BA
 uni0926094D092C094D0930 dvD_B_RA
 uni0926094D092D dvD_BHA
+uni0926094D092D094D092F dvD_BH_YA
 uni0926094D092E dvD_MA
 uni0926094D092F dvD_YA
+uni0926094D0930094D092F dvD_R_YA
 uni0926094D0935 dvD_VA
+uni0926094D0935094D092F dvD_V_YA
 
 uni0927094D0928 dvDH_NA
 uni0927094D0928094D092F dvDH_N_YA
@@ -878,53 +841,70 @@ uni0939094D0935 dvH_VA
 
 uni0933094D092F dvLL_YA
 
-# Mark variants and ligatures
+uni093F.alt01 dvmI.alt01
+uni093F.alt02 dvmI.alt02
+uni093F.alt03 dvmI.alt03
+uni093F.alt04 dvmI.alt04
+uni093F.alt05 dvmI.alt05
+uni093F.alt06 dvmI.alt06
+uni093F.alt07 dvmI.alt07
+uni093F.alt08 dvmI.alt08
+uni093F.alt09 dvmI.alt09
+uni093F.alt10 dvmI.alt10
+uni093F.alt11 dvmI.alt11
+uni093F.alt12 dvmI.alt12
+uni093F.alt13 dvmI.alt13
+uni093F.alt14 dvmI.alt14
+uni093F.alt15 dvmI.alt15
+uni093F.alt16 dvmI.alt16
+uni093F.alt17 dvmI.alt17
+uni093F.alt18 dvmI.alt18
+uni093F.alt19 dvmI.alt19
+uni093F.alt20 dvmI.alt20
+uni093F.alt21 dvmI.alt21
+uni093F.alt22 dvmI.alt22
+uni093F.alt23 dvmI.alt23
+uni093F.alt24 dvmI.alt24
+uni093F.alt25 dvmI.alt25
+uni093F.alt26 dvmI.alt26
+uni093F.alt27 dvmI.alt27
+uni093F.alt28 dvmI.alt28
+uni093F.alt29 dvmI.alt29
+uni093F.alt30 dvmI.alt30
+uni093F.alt31 dvmI.alt31
+uni093F.alt32 dvmI.alt32
 
-uni093F.a01 dvmI.a01
-uni093F.a02 dvmI.a02
-uni093F.a03 dvmI.a03
-uni093F.a04 dvmI.a04
-uni093F.a05 dvmI.a05
-uni093F.a06 dvmI.a06
-uni093F.a07 dvmI.a07
-uni093F.a08 dvmI.a08
-uni093F.a09 dvmI.a09
-uni093F.a10 dvmI.a10
-uni093F.a11 dvmI.a11
-uni093F.a12 dvmI.a12
-uni093F.a13 dvmI.a13
-uni093F.a14 dvmI.a14
-uni093F.a15 dvmI.a15
-uni093F.a16 dvmI.a16
-uni093F.a17 dvmI.a17
-uni093F.a18 dvmI.a18
-uni093F.a19 dvmI.a19
-uni093F.a20 dvmI.a20
-uni093F.a21 dvmI.a21
-uni093F.a22 dvmI.a22
-uni093F.a23 dvmI.a23
-uni093F.a24 dvmI.a24
-uni093F.a25 dvmI.a25
-uni093F.a26 dvmI.a26
-uni093F.a27 dvmI.a27
-uni093F.a28 dvmI.a28
-uni093F.a29 dvmI.a29
-uni093F.a30 dvmI.a30
-uni093F.a31 dvmI.a31
-uni093F.a32 dvmI.a32
+uni0940.long dvmII.long
+uni0901.small dvCandrabindu.small
 
-uni0940.aLong dvmII.aLong
-uni0901.aSmall dvCandrabindu.aSmall
+uni091D.matrau dvJHA.matrau
+uni091D093C.matrau dvJHxA.matrau
+uni091C094D091D.matrau dvJ_JHA.matrau
+uni092C094D091D.matrau dvB_JHA.matrau
+
+uni0915094D0937.matrau dvK_SSA.matrau
+uni0924094D0915094D0937.matrau dvT_K_SSA.matrau
+uni091C094D091E.matrau dvJ_NYA.matrau
+uni091C094D091C094D091E.matrau dvJ_J_NYA.matrau
+
+uni0919093C.matrau dvNGxA.matrau
+uni091B093C.matrau dvCHxA.matrau
+uni091F093C.matrau dvTTxA.matrau
+uni0920093C.matrau dvTTHxA.matrau
+uni0921093C.matrau dvDDxA.matrau
+uni0922093C.matrau dvDDHxA.matrau
+uni0933093C.matrau dvLLxA.matrau
 
 uni0930094D0902 dvReph_Anusvara
 uni0930094D0901 dvReph_Candrabindu
 
-uni0902.amI dvAnusvara.amI
-uni0901.amI dvCandrabindu.amI
-uni0930094D.amI dvReph.amI
-uni0930094D0902.amI dvReph_Anusvara.amI
-uni0930094D0901.amI dvReph_Candrabindu.amI
-uni0951.amI dvUdatta.amI
+uni0902.matrai dvAnusvara.matrai
+uni0901.matrai dvCandrabindu.matrai
+uni0930094D.matrai dvReph.matrai
+uni0930094D0902.matrai dvReph_Anusvara.matrai
+uni0930094D0901.matrai dvReph_Candrabindu.matrai
+uni0951.matrai udatta.matrai
+
 uni09080902 dvII_Anusvara
 uni09080901 dvII_Candrabindu
 uni09100902 dvAI_Anusvara
@@ -936,17 +916,18 @@ uni09140901 dvAU_Candrabindu
 uni090D0902 dvEcandra_Anusvara
 uni09720902 dvAcandra_Anusvara
 uni09110902 dvOcandra_Anusvara
+
 uni09400902 dvmII_Anusvara
 uni09400901 dvmII_Candrabindu
 uni09400930094D dvmII_Reph
 uni09400930094D0902 dvmII_Reph_Anusvara
 uni09400930094D0901 dvmII_Reph_Candrabindu
 
-uni09400902.aLong dvmII_Anusvara.aLong
-uni09400901.aLong dvmII_Candrabindu.aLong
-uni09400930094D.aLong dvmII_Reph.aLong
-uni09400930094D0902.aLong dvmII_Reph_Anusvara.aLong
-uni09400930094D0901.aLong dvmII_Reph_Candrabindu.aLong
+uni09400902.long dvmII_Anusvara.long
+uni09400901.long dvmII_Candrabindu.long
+uni09400930094D.long dvmII_Reph.long
+uni09400930094D0902.long dvmII_Reph_Anusvara.long
+uni09400930094D0901.long dvmII_Reph_Candrabindu.long
 
 uni09470902 dvmE_Anusvara
 uni09470901 dvmE_Candrabindu
@@ -973,27 +954,19 @@ uni094C0930094D0902 dvmAU_Reph_Anusvara
 uni094C0930094D0901 dvmAU_Reph_Candrabindu
 
 uni09450902 dvmEcandra_Anusvara
+uni09450901 dvmEcandra_Candrabindu
+uni09450930094D dvmEcandra_Reph
+uni09450930094D0902 dvmEcandra_Reph_Anusvara
+uni09450930094D0901 dvmEcandra_Reph_Candrabindu
+
 uni09490902 dvmOcandra_Anusvara
+uni09490901 dvmOcandra_Candrabindu
+uni09490930094D dvmOcandra_Reph
+uni09490930094D0902 dvmOcandra_Reph_Anusvara
+uni09490930094D0901 dvmOcandra_Reph_Candrabindu
+
 uni093C0941 dvNukta_mU
 uni093C0942 dvNukta_mUU
-uni0919093C.a dvNGxA.a
-uni091B093C.a dvCHxA.a
-uni091F093C.a dvTTxA.a
-uni0920093C.a dvTTHxA.a
-uni0921093C.a dvDDxA.a
-uni0922093C.a dvDDHxA.a
-uni0933093C.a dvLLxA.a
-
-uni091D.amU dvJHA.amU
-uni091D093C.amU dvJHxA.amU
-uni091C094D091D.amU dvJ_JHA.amU
-uni092C094D091D.amU dvB_JHA.amU
-uni0915094D0937.amU dvK_SSA.amU
-uni0924094D0915094D0937.amU dvT_K_SSA.amU
-uni091C094D091E.amU dvJ_NYA.amU
-uni091C094D091C094D091E.amU dvJ_J_NYA.amU
-
-# Consonant-vowel ligatures
 
 uni09300941 dvRA_mU
 uni09300942 dvRA_mUU
@@ -1010,16 +983,15 @@ uni0932094D09390942 dvL_HA_mUU
 uni0935094D09390941 dvV_HA_mU
 uni0935094D09390942 dvV_HA_mUU
 uni09260943 dvDA_mvR
+uni09360943 dvSHA_mvR
 uni09390943 dvHA_mvR
-
-uni0936.amvR dvSHA.amvR
 
 # Regional variants
 
-uni0967.aNorth dvOne.aNorth
-uni096B.aNorth dvFive.aNorth
-uni096E.aNorth dvEight.aNorth
-uni096F.aNorth dvNine.aNorth
+uni0967.north dvOne.north
+uni096B.north dvFive.north
+uni096E.north dvEight.north
+uni096F.north dvNine.north
 
 uni0932.MAR dvLA.MAR
 uni0936.MAR dvSHA.MAR
@@ -1066,82 +1038,83 @@ uni0939094D0932.MAR dvH_LA.MAR
 
 # Miscellaneous
 
-uni0939094D.aVirama dvHA_Virama
 uni0936094D091A.MAR dvSH_CA.MAR
 uni0936094D0935.MAR dvSH_VA.MAR
 
 # Simplified or traditional variants
 
-uni091E094D091A.aSimp dvNY_CA.aSimp
-uni091E094D091C.aSimp dvNY_JA.aSimp
-uni091E094D091E.aSimp dvNY_NYA.aSimp
-uni0936094D091A.aSimp dvSH_CA.aSimp
-uni0936094D0935.aSimp dvSH_VA.aSimp
-uni0937094D091F.aSimp dvSS_TTA.aSimp
-uni0937094D0920.aSimp dvSS_TTHA.aSimp
+uni091E094D091A.simplified dvNY_CA.simplified
+uni091E094D091C.simplified dvNY_JA.simplified
+uni091E094D091E.simplified dvNY_NYA.simplified
+uni0936094D091A.simplified dvSH_CA.simplified
+uni0936094D0935.simplified dvSH_VA.simplified
+uni0937094D091F.simplified dvSS_TTA.simplified
+uni0937094D0920.simplified dvSS_TTHA.simplified
 
-uni0936094D091A.aSimp.MAR dvSH_CA.aSimp.MAR
-uni0936094D0935.aSimp.MAR dvSH_VA.aSimp.MAR
+uni0936094D091A.simplified.MAR dvSH_CA.simplified.MAR
+uni0936094D0935.simplified.MAR dvSH_VA.simplified.MAR
 
-uni0939094D.aTrad dvH.aTrad
+uni0939094D.traditional dvH.traditional
 
-uni0915094D0924.aTrad dvK_TA.aTrad
-uni0917094D0928094D092F.aTrad dvG_N_YA.aTrad
-uni0924094D0916094D0928.aTrad dvT_KH_NA.aTrad
-uni0924094D0928094D092F.aTrad dvT_N_YA.aTrad
-uni0924094D0938094D0928.aTrad dvT_S_NA.aTrad
-uni0927094D0928094D092F.aTrad dvDH_N_YA.aTrad
-uni0928094D0928094D092F.aTrad dvN_N_YA.aTrad
-uni092A094D091F.aTrad dvP_TTA.aTrad
-uni092A094D0920.aTrad dvP_TTHA.aTrad
-uni092A094D0924.aTrad dvP_TA.aTrad
+uni0915094D0924.traditional dvK_TA.traditional
+uni0917094D0928094D092F.traditional dvG_N_YA.traditional
+uni0919094D092E.traditional dvNG_MA.traditional
+uni0924094D0916094D0928.traditional dvT_KH_NA.traditional
+uni0924094D0928094D092F.traditional dvT_N_YA.traditional
+uni0924094D0938094D0928.traditional dvT_S_NA.traditional
+uni0927094D0928094D092F.traditional dvDH_N_YA.traditional
+uni0928094D0928094D092F.traditional dvN_N_YA.traditional
+uni092A094D091F.traditional dvP_TTA.traditional
+uni092A094D0920.traditional dvP_TTHA.traditional
+uni092A094D0924.traditional dvP_TA.traditional
 
-uni0915094D0928.aTrad dvK_NA.aTrad
-uni0916094D0928.aTrad dvKH_NA.aTrad
-uni0917094D0928.aTrad dvG_NA.aTrad
-uni0918094D0928.aTrad dvGH_NA.aTrad
-uni091A094D0928.aTrad dvC_NA.aTrad
-uni091B094D0928.aTrad dvCH_NA.aTrad
-uni091C094D0928.aTrad dvJ_NA.aTrad
-uni091D094D0928.aTrad dvJH_NA.aTrad
-uni091F094D0928.aTrad dvTT_NA.aTrad
-uni0920094D0928.aTrad dvTTH_NA.aTrad
-uni0921094D0928.aTrad dvDD_NA.aTrad
-uni0924094D0928.aTrad dvT_NA.aTrad
-uni0925094D0928.aTrad dvTH_NA.aTrad
-uni0926094D0928.aTrad dvD_NA.aTrad
-uni0927094D0928.aTrad dvDH_NA.aTrad
-uni0928094D0928.aTrad dvN_NA.aTrad
-uni092A094D0928.aTrad dvP_NA.aTrad
-uni092B094D0928.aTrad dvPH_NA.aTrad
-uni092C094D0928.aTrad dvB_NA.aTrad
-uni092D094D0928.aTrad dvBH_NA.aTrad
-uni092E094D0928.aTrad dvM_NA.aTrad
-uni092F094D0928.aTrad dvY_NA.aTrad
-uni0935094D0928.aTrad dvV_NA.aTrad
-uni0936094D0928.aTrad dvSH_NA.aTrad
-uni0938094D0928.aTrad dvS_NA.aTrad
+uni0915094D0928.traditional dvK_NA.traditional
+uni0916094D0928.traditional dvKH_NA.traditional
+uni0917094D0928.traditional dvG_NA.traditional
+uni0918094D0928.traditional dvGH_NA.traditional
+uni0919094D0928.traditional dvNG_NA.traditional
+uni091A094D0928.traditional dvC_NA.traditional
+uni091B094D0928.traditional dvCH_NA.traditional
+uni091C094D0928.traditional dvJ_NA.traditional
+uni091D094D0928.traditional dvJH_NA.traditional
+uni091F094D0928.traditional dvTT_NA.traditional
+uni0920094D0928.traditional dvTTH_NA.traditional
+uni0921094D0928.traditional dvDD_NA.traditional
+uni0924094D0928.traditional dvT_NA.traditional
+uni0925094D0928.traditional dvTH_NA.traditional
+uni0927094D0928.traditional dvDH_NA.traditional
+uni0928094D0928.traditional dvN_NA.traditional
+uni092A094D0928.traditional dvP_NA.traditional
+uni092B094D0928.traditional dvPH_NA.traditional
+uni092C094D0928.traditional dvB_NA.traditional
+uni092D094D0928.traditional dvBH_NA.traditional
+uni092E094D0928.traditional dvM_NA.traditional
+uni092F094D0928.traditional dvY_NA.traditional
+uni0935094D0928.traditional dvV_NA.traditional
+uni0936094D0928.traditional dvSH_NA.traditional
+uni0938094D0928.traditional dvS_NA.traditional
 
-uni0915094D0928094D.aTrad dvK_N.aTrad
-uni0916094D0928094D.aTrad dvKH_N.aTrad
-uni0917094D0928094D.aTrad dvG_N.aTrad
-uni0918094D0928094D.aTrad dvGH_N.aTrad
-uni091A094D0928094D.aTrad dvC_N.aTrad
-uni091C094D0928094D.aTrad dvJ_N.aTrad
-uni091D094D0928094D.aTrad dvJH_N.aTrad
-uni0924094D0928094D.aTrad dvT_N.aTrad
-uni0925094D0928094D.aTrad dvTH_N.aTrad
-uni0927094D0928094D.aTrad dvDH_N.aTrad
-uni0928094D0928094D.aTrad dvN_N.aTrad
-uni092A094D0928094D.aTrad dvP_N.aTrad
-uni092B094D0928094D.aTrad dvPH_N.aTrad
-uni092C094D0928094D.aTrad dvB_N.aTrad
-uni092D094D0928094D.aTrad dvBH_N.aTrad
-uni092E094D0928094D.aTrad dvM_N.aTrad
-uni092F094D0928094D.aTrad dvY_N.aTrad
-uni0935094D0928094D.aTrad dvV_N.aTrad
-uni0936094D0928094D.aTrad dvSH_N.aTrad
-uni0938094D0928094D.aTrad dvS_N.aTrad
+uni0915094D0928094D.traditional dvK_N.traditional
+uni0916094D0928094D.traditional dvKH_N.traditional
+uni0917094D0928094D.traditional dvG_N.traditional
+uni0918094D0928094D.traditional dvGH_N.traditional
+uni091A094D0928094D.traditional dvC_N.traditional
+uni091C094D0928094D.traditional dvJ_N.traditional
+uni091D094D0928094D.traditional dvJH_N.traditional
+uni0924094D0928094D.traditional dvT_N.traditional
+uni0925094D0928094D.traditional dvTH_N.traditional
+uni0927094D0928094D.traditional dvDH_N.traditional
+uni0928094D0928094D.traditional dvN_N.traditional
+uni092A094D0928094D.traditional dvP_N.traditional
+uni092B094D0928094D.traditional dvPH_N.traditional
+uni092C094D0928094D.traditional dvB_N.traditional
+uni092D094D0928094D.traditional dvBH_N.traditional
+uni092E094D0928094D.traditional dvM_N.traditional
+uni092F094D0928094D.traditional dvY_N.traditional
+uni0935094D0928094D.traditional dvV_N.traditional
+uni0936094D0928094D.traditional dvSH_N.traditional
+uni0938094D0928094D.traditional dvS_N.traditional
+uni09260943.traditional dvDA_mvR.traditional
 
 # ---
 
@@ -1347,6 +1320,7 @@ Ydieresis Ydieresis uni0178 # LATIN CAPITAL LETTER Y WITH DIAERESIS
 Zcaron Zcaron uni017D # LATIN CAPITAL LETTER Z WITH CARON
 zcaron zcaron uni017E # LATIN SMALL LETTER Z WITH CARON
 florin florin uni0192 # LATIN SMALL LETTER F WITH HOOK
+uni02BC apostrophemod uni02BC # MODIFIER LETTER APOSTROPHE
 circumflex circumflex uni02C6 # MODIFIER LETTER CIRCUMFLEX ACCENT
 caron caron uni02C7 # CARON
 breve breve uni02D8 # BREVE

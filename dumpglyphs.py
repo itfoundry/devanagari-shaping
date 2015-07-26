@@ -31,9 +31,9 @@ TEST_MODE_GLYPHS = [  # Specified in development glyph names
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
 # or a directory containing OTF/TTF/OTC/TTC files.
 
-INPUT_PATH = 'input/ITFDevanagari/latest'
+INPUT_PATH = 'input/ITFDevanagari/build9'
 
-GOADB_PATH = 'input/ITFDevanagari/latest/GlyphOrderAndAliasDB'
+GOADB_PATH = 'input/ITFDevanagari/build9/GlyphOrderAndAliasDB'
 
 FONT_SIZE = 100 # px
 
