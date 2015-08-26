@@ -24,6 +24,7 @@ TEST_MODE = False
 TEST_MODE_GLYPHS = [  # Specified in development glyph names
     'dvCandrabindu',
     'dvKA',
+    'dvK_S_P_LA',
 ]
 
 # BASIC OPTIONS
@@ -31,9 +32,9 @@ TEST_MODE_GLYPHS = [  # Specified in development glyph names
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
 # or a directory containing OTF/TTF/OTC/TTC files.
 
-INPUT_PATH = 'input/Kohinoor Devanagari/build19'
+INPUT_PATH = 'input/KohinoorDevanagari/build20'
 
-GOADB_PATH = 'input/Kohinoor Devanagari/build19/GlyphOrderAndAliasDB'
+GOADB_PATH = 'input/KohinoorDevanagari/build20/GlyphOrderAndAliasDB'
 
 FONT_SIZE = 100 # px
 
@@ -87,8 +88,9 @@ def main():
         if info['openTypeNameVersion'].replace('.', '', 1).isalnum():
             info['_version'] = info['openTypeNameVersion']
         else:
-            info['_version'] = round(info['fontRevision'], 4)
+            info['_version'] = '{:.3f}'.format(info['fontRevision'])
 
+        info['_familyName_postscript'] = info['familyName'].replace(' ', '')
         info['_ascender']  = info['openTypeHheaAscender']
         info['_descender'] = info['openTypeHheaDescender']
 
@@ -113,10 +115,10 @@ def main():
 
         dump_directory = os.path.join(
             'dump',
-            info['familyName'],
+            info['_familyName_postscript'],
             info['styleName'],
-            str(info['_version']),
-            str(FONT_SIZE),
+            info['_version'],
+            '{}'.format(FONT_SIZE),
         )
         mkdir_p(dump_directory)
 
@@ -126,30 +128,35 @@ def main():
 
         # Get concerned glyphs
 
-        names_p2d_map = parse_goadb(GOADB_PATH)
+        goadb = parse_goadb(GOADB_PATH)
+        names_p2d_map = {p: d for p, d, u in goadb}
+        names_d2p_map = {d: p for p, d, u in goadb}
+        name_d_to_unicode_mapping_map = {d: u for p, d, u in goadb}
 
         glyphs_concerned = []
 
         if TEST_MODE:
-            names_d2p_map = {v: k for k, v in names_p2d_map.items()}
+
             for name_d in TEST_MODE_GLYPHS:
                 name_p = names_d2p_map[name_d]
+                unicode_mapping = name_d_to_unicode_mapping_map[name_d]
                 gid = font.getGlyphID(name_p)
                 glyph = glyphs[name_p]
-                glyphs_concerned.append([glyph, gid, name_p, name_d])
+                glyphs_concerned.append([glyph, gid, name_p, name_d, unicode_mapping])
         else:
             for gid, name_p in enumerate(font.getGlyphOrder()):
                 name_d = names_p2d_map[name_p]
+                unicode_mapping = name_d_to_unicode_mapping_map[name_d]
                 glyph = glyphs[name_p]
-                if name_d.startswith('dv') or (name_d in GENERAL_GLYPHS):
-                    glyphs_concerned.append([glyph, gid, name_p, name_d])
+                # if name_d.startswith('dv') or (name_d in GENERAL_GLYPHS):
+                glyphs_concerned.append([glyph, gid, name_p, name_d, unicode_mapping])
 
         # Glyph metrics loop
 
         bounds_top = []
         bounds_bottom = []
 
-        for i, (glyph, gid, name_p, name_d) in enumerate(glyphs_concerned):
+        for i, (glyph, gid, name_p, name_d, unicode_mapping) in enumerate(glyphs_concerned):
 
             pen_bounds = BoundsPen(glyphs)
             glyph.draw(pen_bounds)
@@ -198,7 +205,10 @@ def main():
 
         # Glyph drawing loop
 
-        for glyph, gid, name_p, name_d, lsb, advance, rsb in glyphs_concerned:
+        if info['styleName'] == 'Regular':
+            html_lines = []
+
+        for glyph, gid, name_p, name_d, unicode_mapping, lsb, advance, rsb in glyphs_concerned:
 
             # Genrate the file name
 
@@ -279,6 +289,35 @@ def main():
                 if not TEST_MODE:
                     newDrawing()
 
+            if info['styleName'] == 'Regular':
+                
+                image_path = os.path.join(
+                    info['styleName'],
+                    info['_version'],
+                    '{}'.format(FONT_SIZE),
+                    dump_name + '.png',
+                )
+
+                html_lines.extend([
+                    '<tr>',
+                    '    <td>{}</td>'.format(gid),
+                    '    <td>{}</td>'.format('U+' + unicode_mapping if unicode_mapping else '-'),
+                    '    <td><img src=\'{}\'></td>'.format(image_path),
+                    '    <td>{}</td>'.format(name_d),
+                    '    <td>{}</td>'.format(name_p),
+                    '  </tr>',
+                ])
+
+        if info['styleName'] == 'Regular':
+            with open('TEMPLATE.html', 'r') as f:
+                template = f.read()
+            html_name = '{}-{}.html'.format(
+                info['_familyName_postscript'],
+                info['_version'].replace('.', '_')
+            )
+            html_path = os.path.join('dump', info['_familyName_postscript'], html_name)
+            with open(html_path, 'w') as f:
+                f.write(template + '\n'.join(html_lines) + '\n')
 
 def mkdir_p(directory):
     try:
@@ -341,15 +380,21 @@ def parse_goadb(path):
     with open(path, 'r') as f:
         goadb_content = f.read()
 
-    names_p2d_map = {}
+    goadb = []
 
     for line in goadb_content.splitlines():
         content = line.partition('#')[0]
         if content:
             parts = content.split()
-            names_p2d_map[parts[0]] = parts[1]
+            name_p = parts.pop(0)
+            name_d = parts.pop(0)
+            if parts:
+                unicode_mapping = parts.pop(0)[3:]
+            else:
+                unicode_mapping = None
+            goadb.append((name_p, name_d, unicode_mapping))
 
-    return names_p2d_map
+    return goadb
 
 def draw_metrics(advance, advance_in_px, origin):
 
