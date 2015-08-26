@@ -32,9 +32,9 @@ TEST_MODE_GLYPHS = [  # Specified in development glyph names
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
 # or a directory containing OTF/TTF/OTC/TTC files.
 
-INPUT_PATH = 'input/KohinoorDevanagari/build20'
+INPUT_PATH = 'input/ITFDevanagari/build10'
 
-GOADB_PATH = 'input/KohinoorDevanagari/build20/GlyphOrderAndAliasDB'
+GOADB_PATH = 'input/ITFDevanagari/build10/GlyphOrderAndAliasDB'
 
 FONT_SIZE = 100 # px
 
@@ -45,13 +45,9 @@ STROKE_WIDTH = 2 # px
 SHOW_BASELINE = True
 SHOW_ADVANCE = True
 
-GENERAL_GLYPHS = [  # Specified in development glyph names
-    'danda',
-    'doubledanda',
-    'zerowidthnonjoiner',
-    'zerowidthjoiner',
-    'dottedcircle',
-]
+PREFIX = 'dv'
+
+GENERAL_GLYPHS = 'udatta udatta.matrai anudatta danda doubledanda indianrupee zerowidthnonjoiner zerowidthjoiner dottedcircle'.split() # Specified in development glyph names
 
 # CANVAS OPTIONS
 
@@ -148,8 +144,8 @@ def main():
                 name_d = names_p2d_map[name_p]
                 unicode_mapping = name_d_to_unicode_mapping_map[name_d]
                 glyph = glyphs[name_p]
-                # if name_d.startswith('dv') or (name_d in GENERAL_GLYPHS):
-                glyphs_concerned.append([glyph, gid, name_p, name_d, unicode_mapping])
+                if name_d.startswith(PREFIX) or (name_d.partition('.')[0] in GENERAL_GLYPHS):
+                    glyphs_concerned.append([glyph, gid, name_p, name_d, unicode_mapping])
 
         # Glyph metrics loop
 
@@ -290,7 +286,7 @@ def main():
                     newDrawing()
 
             if info['styleName'] == 'Regular':
-                
+
                 image_path = os.path.join(
                     info['styleName'],
                     info['_version'],
