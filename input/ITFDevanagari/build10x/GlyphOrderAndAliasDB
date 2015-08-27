@@ -874,31 +874,7 @@ uni093F.alt31 dvmI.alt31
 uni093F.alt32 dvmI.alt32
 
 uni0940.long dvmII.long
-
-uni0941.small01 dvmU.small01
-uni0941.small02 dvmU.small02
-uni0941.small03 dvmU.small03
-uni0942.small01 dvmUU.small01
-uni0942.small02 dvmUU.small02
-uni0942.small03 dvmUU.small03
-
-uni0943.tta dvmvR.tta
-uni0944.tta dvmvRR.tta
-
-uni0947.narrow dvmE.narrow
-uni0948.narrow dvmAI.narrow
-
 uni0901.small dvCandrabindu.small
-
-uni0926.matrau dvDA.matrau
-uni0915094D0926.matrau dvK_DA.matrau
-uni0917094D0926.matrau dvG_DA.matrau
-uni091C094D0926.matrau dvJ_DA.matrau
-uni0928094D0926.matrau dvN_DA.matrau
-uni092C094D0926.matrau dvB_DA.matrau
-uni092E094D0926.matrau dvM_DA.matrau
-uni0932094D0926.matrau dvL_DA.matrau
-uni0938094D0926.matrau dvS_DA.matrau
 
 uni091D.matrau dvJHA.matrau
 uni091D093C.matrau dvJHxA.matrau
@@ -926,9 +902,19 @@ uni0901.matrai dvCandrabindu.matrai
 uni0930094D.reph.matrai dvReph.matrai
 uni0930094D0902.matrai dvReph_Anusvara.matrai
 uni0930094D0901.matrai dvReph_Candrabindu.matrai
+uni0951.matrai udatta.matrai
 
 uni09080902 dvII_Anusvara
 uni09080901 dvII_Candrabindu
+uni09100902 dvAI_Anusvara
+uni09100901 dvAI_Candrabindu
+uni09130902 dvO_Anusvara
+uni09130901 dvO_Candrabindu
+uni09140902 dvAU_Anusvara
+uni09140901 dvAU_Candrabindu
+uni090D0902 dvEcandra_Anusvara
+uni09720902 dvAcandra_Anusvara
+uni09110902 dvOcandra_Anusvara
 
 uni09400902 dvmII_Anusvara
 uni09400901 dvmII_Candrabindu
@@ -948,23 +934,11 @@ uni09470930094D dvmE_Reph
 uni09470930094D0902 dvmE_Reph_Anusvara
 uni09470930094D0901 dvmE_Reph_Candrabindu
 
-uni09470902.narrow dvmE_Anusvara.narrow
-uni09470901.narrow dvmE_Candrabindu.narrow
-uni09470930094D.narrow dvmE_Reph.narrow
-uni09470930094D0902.narrow dvmE_Reph_Anusvara.narrow
-uni09470930094D0901.narrow dvmE_Reph_Candrabindu.narrow
-
 uni09480902 dvmAI_Anusvara
 uni09480901 dvmAI_Candrabindu
 uni09480930094D dvmAI_Reph
 uni09480930094D0902 dvmAI_Reph_Anusvara
 uni09480930094D0901 dvmAI_Reph_Candrabindu
-
-uni09480902.narrow dvmAI_Anusvara.narrow
-uni09480901.narrow dvmAI_Candrabindu.narrow
-uni09480930094D.narrow dvmAI_Reph.narrow
-uni09480930094D0902.narrow dvmAI_Reph_Anusvara.narrow
-uni09480930094D0901.narrow dvmAI_Reph_Candrabindu.narrow
 
 uni094B0902 dvmO_Anusvara
 uni094B0901 dvmO_Candrabindu
@@ -983,6 +957,9 @@ uni09450901 dvmEcandra_Candrabindu
 
 uni09490902 dvmOcandra_Anusvara
 uni09490901 dvmOcandra_Candrabindu
+
+uni093C0941 dvNukta_mU
+uni093C0942 dvNukta_mUU
 
 uni09300941 dvRA_mU
 uni09300942 dvRA_mUU
@@ -1007,31 +984,75 @@ uni096B.north dvFive.north
 uni096E.north dvEight.north
 uni096F.north dvNine.north
 
-uni0966.tnum dvZero.tnum
-uni0967.tnum dvOne.tnum
-uni0968.tnum dvTwo.tnum
-uni0969.tnum dvThree.tnum
-uni096A.tnum dvFour.tnum
-uni096B.tnum dvFive.tnum
-uni096C.tnum dvSix.tnum
-uni096D.tnum dvSeven.tnum
-uni096E.tnum dvEight.tnum
-uni096F.tnum dvNine.tnum
+uni0932.MAR dvLA.MAR
+uni0936.MAR dvSHA.MAR
+
+uni0932093C.MAR dvLxA.MAR
+uni0936093C.MAR dvSHxA.MAR
+uni0936094D.MAR dvSH.MAR
+uni0936093C094D.MAR dvSHx.MAR
+
+uni0915094D0932.MAR dvK_LA.MAR
+uni0915094D0936.MAR dvK_SHA.MAR
+uni0915093C094D0936.MAR dvKx_SHA.MAR
+dvK_S_P_LA.MAR dvK_S_P_LA.MAR
+uni0916094D0936.MAR dvKH_SHA.MAR
+uni0916093C094D0936.MAR dvKHx_SHA.MAR
+uni0917094D0932.MAR dvG_LA.MAR
+uni091E094D0936.MAR dvNY_SHA.MAR
+uni0924094D092A094D0932.MAR dvT_P_LA.MAR
+uni0924094D0932.MAR dvT_LA.MAR
+uni0928094D0936.MAR dvN_SHA.MAR
+uni092A094D0932.MAR dvP_LA.MAR
+uni092A094D0936.MAR dvP_SHA.MAR
+uni092B094D0932.MAR dvPH_LA.MAR
+uni092B094D0936.MAR dvPH_SHA.MAR
+uni092C094D0932.MAR dvB_LA.MAR
+uni092C094D0936.MAR dvB_SHA.MAR
+uni092D094D0932.MAR dvBH_LA.MAR
+uni092E094D0932.MAR dvM_LA.MAR
+uni092E094D0936.MAR dvM_SHA.MAR
+uni0932094D0932.MAR dvL_LA.MAR
+uni0935094D0932.MAR dvV_LA.MAR
+uni0936094D0915.MAR dvSH_KA.MAR
+uni0936094D0915093C.MAR dvSH_KxA.MAR
+uni0936094D091B.MAR dvSH_CHA.MAR
+uni0936094D091F.MAR dvSH_TTA.MAR
+uni0936094D0924.MAR dvSH_TA.MAR
+uni0936094D0928.MAR dvSH_NA.MAR
+uni0936094D092E.MAR dvSH_MA.MAR
+uni0936094D092F.MAR dvSH_YA.MAR
+uni0936094D0932.MAR dvSH_LA.MAR
+uni0936094D0936.MAR dvSH_SHA.MAR
+uni0938094D0932.MAR dvS_LA.MAR
+uni0939094D0932.MAR dvH_LA.MAR
+
+uni0936094D091A.MAR dvSH_CA.MAR
+uni0936094D0935.MAR dvSH_VA.MAR
+
+uni091E094D091A.simplified dvNY_CA.simplified
+uni091E094D091C.simplified dvNY_JA.simplified
+uni091E094D091E.simplified dvNY_NYA.simplified
+uni0936094D091A.simplified dvSH_CA.simplified
+uni0936094D0935.simplified dvSH_VA.simplified
+uni0937094D091F.simplified dvSS_TTA.simplified
+uni0937094D0920.simplified dvSS_TTHA.simplified
+
+uni0936094D091A.simplified.MAR dvSH_CA.simplified.MAR
+uni0936094D0935.simplified.MAR dvSH_VA.simplified.MAR
 
 uni0939094D.traditional dvH.traditional
 
 uni0915094D0924.traditional dvK_TA.traditional
-uni0919094D0917.traditional dvNG_GA.traditional
+uni0917094D0928094D092F.traditional dvG_N_YA.traditional
 uni0919094D092E.traditional dvNG_MA.traditional
-uni091E094D091A.traditional dvNY_CA.traditional
+uni0924094D0916094D0928.traditional dvT_KH_NA.traditional
+uni0924094D0928094D092F.traditional dvT_N_YA.traditional
+uni0924094D0938094D0928.traditional dvT_S_NA.traditional
+uni0927094D0928094D092F.traditional dvDH_N_YA.traditional
+uni0928094D0928094D092F.traditional dvN_N_YA.traditional
 uni092A094D0924.traditional dvP_TA.traditional
-uni0936094D091A.traditional dvSH_CA.traditional
-uni0936094D0932.traditional dvSH_LA.traditional
-uni0936094D0935.traditional dvSH_VA.traditional
-uni0937094D091F.traditional dvSS_TTA.traditional
-uni0937094D0920.traditional dvSS_TTHA.traditional
-uni0937094D091F094D0930.traditional dvSS_TT_RA.traditional
-uni0937094D0920094D0930.traditional dvSS_TTH_RA.traditional
+
 uni0915094D0928.traditional dvK_NA.traditional
 uni0916094D0928.traditional dvKH_NA.traditional
 uni0917094D0928.traditional dvG_NA.traditional
@@ -1059,9 +1080,6 @@ uni0936094D0928.traditional dvSH_NA.traditional
 uni0938094D0928.traditional dvS_NA.traditional
 
 uni09260943.traditional dvDA_mvR.traditional
-
-dvHeadline.01 dvHeadline.01
-dvHeadline.02 dvHeadline.02
 
 exclam exclam uni0021 # EXCLAMATION MARK
 quotedbl quotedbl uni0022 # QUOTATION MARK
@@ -1644,7 +1662,7 @@ Euro Euro uni20AC # EURO SIGN
 uni20B1 uni20B1 uni20B1 # PESO SIGN
 uni20B2 uni20B2 uni20B2 # GUARANI SIGN
 uni20B5 uni20B5 uni20B5 # CEDI SIGN
-uni20B9 uni20B9 uni20B9 # INDIAN RUPEE SIGN
+# uni20B9 uni20B9 uni20B9 # INDIAN RUPEE SIGN
 uni20BA uni20BA uni20BA # TURKISH LIRA SIGN
 uni20BD uni20BD uni20BD # RUBLE SIGN
 uni2113 uni2113 uni2113 # SCRIPT SMALL L
