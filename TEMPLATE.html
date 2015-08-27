@@ -17,7 +17,7 @@
     text-align: right;
   }
   th:nth-child(3), th:nth-child(4), td:nth-child(3), td:nth-child(4) {
-    background-color: #eeeeee;
+    background-color: hsla(0, 0%, 0%, 0.03);
   }
   td:nth-child(3) {
     text-align: center;
@@ -25,14 +25,22 @@
   td:nth-child(3) img {
     height: 50%;
   }
+  tr.missing {
+    background-color: hsl(355, 100%, 90%);
+  }
+  tr.addition {
+    background-color: hsl(155, 100%, 90%);
+  }
 </style>
-<table>
-  <thead>
-    <tr>
-      <th>GID</th>
-      <th>Character</th>
-      <th>Dump</th>
-      <th>Development Name</th>
-      <th>Production Name</th>
-    </tr>
-  </thead>
+<p>
+  <table>
+    <thead>
+      <tr>
+        <th>GID</th>
+        <th>Character</th>
+        <th>Dump</th>
+        <th>Development Name</th>
+        <th>Production Name</th>
+        <th>Note</th>
+      </tr>
+    </thead>

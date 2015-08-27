@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-from __future__ import division
+from __future__ import division, print_function, unicode_literals
 
-import os, subprocess, time
+import os, subprocess, time, difflib
 
 from fontTools.ttLib import TTFont
 from fontTools.pens.cocoaPen import CocoaPen
@@ -21,20 +21,17 @@ else:
 # TEST MODE?
 
 TEST_MODE = False
-TEST_MODE_GLYPHS = [  # Specified in development glyph names
-    'dvCandrabindu',
-    'dvKA',
-    'dvK_S_P_LA',
-]
+TEST_MODE_GLYPHS = 'dvCandrabindu dvKA dvK_S_P_LA'.split() # Specified in development glyph names
 
 # BASIC OPTIONS
 
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
 # or a directory containing OTF/TTF/OTC/TTC files.
 
-INPUT_PATH = 'input/ITFDevanagari/build10'
+INPUT_PATH = 'input/KohinoorDevanagari/build20x'
+GOADB_PATH = INPUT_PATH + '/GlyphOrderAndAliasDB'
 
-GOADB_PATH = 'input/ITFDevanagari/build10/GlyphOrderAndAliasDB'
+STANDARD_GOADB_PATH = 'input/STANDARD_GOADB_dv'
 
 FONT_SIZE = 100 # px
 
@@ -69,30 +66,11 @@ def main():
 
         # Get font information
 
-        info = {}
-
-        info['unitsPerEm']   = font['head'].unitsPerEm
-        info['fontRevision'] = font['head'].fontRevision
-
-        info['openTypeHheaAscender']  = font['hhea'].ascent
-        info['openTypeHheaDescender'] = font['hhea'].descent
-
-        info['familyName']          = get_nameid(font, 16, 1)
-        info['styleName']           = get_nameid(font, 17, 2)
-        info['openTypeNameVersion'] = get_nameid(font, 5)
-
-        if info['openTypeNameVersion'].replace('.', '', 1).isalnum():
-            info['_version'] = info['openTypeNameVersion']
-        else:
-            info['_version'] = '{:.3f}'.format(info['fontRevision'])
-
-        info['_familyName_postscript'] = info['familyName'].replace(' ', '')
-        info['_ascender']  = info['openTypeHheaAscender']
-        info['_descender'] = info['openTypeHheaDescender']
+        info = FontInfo(font)
 
         # Calculate the scaling factor
 
-        scaling = FONT_SIZE / info['unitsPerEm']
+        scaling = FONT_SIZE / info.unitsPerEm
 
         # Calculate some basic drawing parameters
 
@@ -100,8 +78,8 @@ def main():
 
         lhp = LINE_HEIGHT_PERCENTAGE
         vop = VERTICAL_OFFSET_PERCENTAGE
-        asc = info['_ascender']
-        des = abs(info['_descender'])
+        asc = info._ascender
+        des = abs(info._descender)
         origin_raw = {
             'x': MARGIN_HORIZONTAL,
             'y': FONT_SIZE * ((lhp - 1) / 2 + des / (asc + des) + vop),
@@ -111,64 +89,90 @@ def main():
 
         dump_directory = os.path.join(
             'dump',
-            info['_familyName_postscript'],
-            info['styleName'],
-            info['_version'],
+            info._familyName_postscript,
+            info.styleName,
+            info._version,
             '{}'.format(FONT_SIZE),
         )
         mkdir_p(dump_directory)
 
         # Initiate the glyph set
 
-        glyphs = font.getGlyphSet()
+        font_glyph_set = font.getGlyphSet()
 
-        # Get concerned glyphs
+        # Prepare the glyph list
+
+        standard_goadb = parse_goadb(STANDARD_GOADB_PATH)
+        standard_goadb_dnames = [d for p, d, u in standard_goadb]
+        standard_p2d_map = {p: d for p, d, u in standard_goadb}
+        standard_d2p_map = {d: p for p, d, u in standard_goadb}
+        standard_d2u_map = {d: u for p, d, u in standard_goadb}
 
         goadb = parse_goadb(GOADB_PATH)
-        names_p2d_map = {p: d for p, d, u in goadb}
-        names_d2p_map = {d: p for p, d, u in goadb}
-        name_d_to_unicode_mapping_map = {d: u for p, d, u in goadb}
+        goadb_dnames = [d for p, d, u in goadb]
+        p2d_map = {p: d for p, d, u in goadb}
+        d2p_map = {d: p for p, d, u in goadb}
+        d2u_map = {d: u for p, d, u in goadb}
 
-        glyphs_concerned = []
+        font_dnames = [p2d_map[pname] for pname in font.getGlyphOrder()]
+
+        kept_standard_goadb_dnames = filter(dname_filter, standard_goadb_dnames)
+        kept_font_dnames = filter(dname_filter, font_dnames)
+
+        # Get glyphs of interest
 
         if TEST_MODE:
-
-            for name_d in TEST_MODE_GLYPHS:
-                name_p = names_d2p_map[name_d]
-                unicode_mapping = name_d_to_unicode_mapping_map[name_d]
-                gid = font.getGlyphID(name_p)
-                glyph = glyphs[name_p]
-                glyphs_concerned.append([glyph, gid, name_p, name_d, unicode_mapping])
+            final_dnames = ['  ' + dname for dname in TEST_MODE_GLYPHS]
         else:
-            for gid, name_p in enumerate(font.getGlyphOrder()):
-                name_d = names_p2d_map[name_p]
-                unicode_mapping = name_d_to_unicode_mapping_map[name_d]
-                glyph = glyphs[name_p]
-                if name_d.startswith(PREFIX) or (name_d.partition('.')[0] in GENERAL_GLYPHS):
-                    glyphs_concerned.append([glyph, gid, name_p, name_d, unicode_mapping])
+            final_dnames = difflib.Differ().compare(kept_standard_goadb_dnames, kept_font_dnames)
+
+        glyphs_of_interest = []
+        for line in final_dnames:
+
+            tag = line[:1]
+            dname = line[2:]
+
+            pname = d2p_map.get(dname)
+            if not pname:
+                pname = standard_d2p_map.get(dname)
+
+            character = d2u_map.get(dname)
+            if not character:
+                character = standard_d2u_map.get(dname)
+
+            if tag == '-':
+                glyph = None
+                gid = None
+            else:
+                glyph = font_glyph_set[pname]
+                gid = font.getGlyphID(pname)
+
+            glyphs_of_interest.append(
+                GlyphInfo(tag, glyph, gid, pname, dname, character, lsb=None, advance=None, rsb=None)
+            )
 
         # Glyph metrics loop
 
         bounds_top = []
         bounds_bottom = []
 
-        for i, (glyph, gid, name_p, name_d, unicode_mapping) in enumerate(glyphs_concerned):
+        for g in glyphs_of_interest:
 
-            pen_bounds = BoundsPen(glyphs)
-            glyph.draw(pen_bounds)
-            bounds = pen_bounds.bounds
+            if g.glyph:
 
-            if bounds is None:
-                bounds = [0, 0, 0, 0]
+                pen_bounds = BoundsPen(font_glyph_set)
+                g.glyph.draw(pen_bounds)
+                bounds = pen_bounds.bounds
 
-            lsb = bounds[0]
-            advance = glyph.width
-            rsb = glyph.width - bounds[2]
+                if bounds is None:
+                    bounds = [0, 0, 0, 0]
 
-            bounds_top.append(bounds[3])
-            bounds_bottom.append(bounds[1])
+                g.lsb = bounds[0]
+                g.advance = g.glyph.width
+                g.rsb = g.glyph.width - bounds[2]
 
-            glyphs_concerned[i].extend([lsb, advance, rsb])
+                bounds_top.append(bounds[3])
+                bounds_bottom.append(bounds[1])
 
         # Check if clipping will happen
 
@@ -178,142 +182,169 @@ def main():
         canvas_space_top = FONT_SIZE * LINE_HEIGHT_PERCENTAGE - origin_raw['y']
         canvas_space_bottom = origin_raw['y']
 
-        print '{familyName}, {styleName}:'.format(**info)
+        print('{familyName}, {styleName}:'.format(**info.__dict__))
 
         if any([
             stretch_top > canvas_space_top,
             stretch_bottom > canvas_space_bottom
         ]) :
-            print '[WARNING] Some glyphs will be clipped by the canvas.'
-            print '  Font size:       ', FONT_SIZE
-            print '  Line height:     ', FONT_SIZE * LINE_HEIGHT_PERCENTAGE
-            print '* Canvas bounds:   ', canvas_space_top, -canvas_space_bottom
-            print '* Outline extremes:', stretch_top, -stretch_bottom
-            print '[BREAK OUT]'
+            print('[WARNING] Some glyphs will be clipped by the canvas.')
+            print('  Font size:       ', FONT_SIZE)
+            print('  Line height:     ', FONT_SIZE * LINE_HEIGHT_PERCENTAGE)
+            print('* Canvas bounds:   ', canvas_space_top, -canvas_space_bottom)
+            print('* Outline extremes:', stretch_top, -stretch_bottom)
+            print('[BREAK OUT]')
             break
 
         else:
-            print '[Note] The line height {} is large enough.'.format(
+            print('[Note] The line height {} is large enough.'.format(
                 FONT_SIZE * LINE_HEIGHT_PERCENTAGE
-            )
+            ))
 
-        print ''
+        print('')
 
         # Glyph drawing loop
 
-        if info['styleName'] == 'Regular':
-            html_lines = []
+        for g in glyphs_of_interest:
 
-        for glyph, gid, name_p, name_d, unicode_mapping, lsb, advance, rsb in glyphs_concerned:
+            if g.glyph:
 
-            # Genrate the file name
+                # Genrate the file name
 
-            dump_name = str(gid).zfill(ZERO_PADDING_WIDTH)
-            if APPEND_THE_GLYPH_NAME:
-                dump_name += '.' + name_d
+                dump_name = str(g.gid).zfill(ZERO_PADDING_WIDTH)
+                if APPEND_THE_GLYPH_NAME:
+                    dump_name += '.' + g.dname
 
-            # Calculate drawing parameters
+                # Calculate drawing parameters
 
-            page_width = advance * scaling + MARGIN_HORIZONTAL * 2
-            page_height = page_height_raw
+                page_width = g.advance * scaling + MARGIN_HORIZONTAL * 2
+                page_height = page_height_raw
 
-            advance_in_px = advance * scaling
+                advance_in_px = g.advance * scaling
 
-            origin = origin_raw.copy()
+                origin = origin_raw.copy()
 
-            if lsb < 0:
-                page_width += abs(lsb) * scaling
-                origin['x'] += abs(lsb) * scaling
-            if rsb < 0:
-                page_width += abs(rsb) * scaling
+                if g.lsb < 0:
+                    page_width += abs(g.lsb) * scaling
+                    origin['x'] += abs(g.lsb) * scaling
+                if g.rsb < 0:
+                    page_width += abs(g.rsb) * scaling
 
-            # Rounding
+                # Rounding
 
-            if ALIGN_TO_PIXELS:
-                page_width = round(page_width / 2) * 2
-                page_height = round(page_height / 2) * 2
-                origin['x'] = round(origin['x'])
-                origin['y'] = round(origin['y'])
-                advance_in_px = round(advance_in_px)
+                if ALIGN_TO_PIXELS:
+                    page_width = round(page_width / 2) * 2
+                    page_height = round(page_height / 2) * 2
+                    origin['x'] = round(origin['x'])
+                    origin['y'] = round(origin['y'])
+                    advance_in_px = round(advance_in_px)
 
-            # Draw and save
+                # Draw and save
 
-            if in_drawbot:
+                if in_drawbot:
 
-                # Initiate the canvas
+                    # Initiate the canvas
 
-                newPage(page_width, page_height)
+                    newPage(page_width, page_height)
 
-                # Draw the background
+                    # Draw the background
 
-                save()
-                fill(1)
+                    save()
+                    fill(1)
 
-                rect(0, 0, width(), height())
+                    rect(0, 0, width(), height())
 
-                restore()
+                    restore()
 
-                # Draw metrics
+                    # Draw metrics
 
-                save()
-                translate(origin['x'], origin['y'])
-                fill(None)
-                strokeWidth(STROKE_WIDTH)
+                    save()
+                    translate(origin['x'], origin['y'])
+                    fill(None)
+                    strokeWidth(STROKE_WIDTH)
 
-                draw_metrics(advance, advance_in_px, origin)
+                    draw_metrics(g.advance, advance_in_px, origin)
 
-                restore()
+                    restore()
 
-                # Draw the glyph
+                    # Draw the glyph
 
-                save()
-                translate(origin['x'], origin['y'])
-                scale(scaling)
+                    save()
+                    translate(origin['x'], origin['y'])
+                    scale(scaling)
 
-                pen_path = CocoaPen(glyphs)
-                glyph.draw(pen_path)
-                drawPath(pen_path.path)
+                    pen_path = CocoaPen(font_glyph_set)
+                    g.glyph.draw(pen_path)
+                    drawPath(pen_path.path)
 
-                restore()
+                    restore()
 
-                # Save the file
+                    # Save the file
 
-                saveImage(os.path.join(dump_directory, dump_name + '.png'))
+                    saveImage(os.path.join(dump_directory, dump_name + '.png'))
 
-                # Clear the canvas
+                    # Clear the canvas
 
-                if not TEST_MODE:
-                    newDrawing()
+                    if not TEST_MODE:
+                        newDrawing()
 
-            if info['styleName'] == 'Regular':
+        if info.styleName == 'Regular':
 
-                image_path = os.path.join(
-                    info['styleName'],
-                    info['_version'],
-                    '{}'.format(FONT_SIZE),
-                    dump_name + '.png',
-                )
-
-                html_lines.extend([
-                    '<tr>',
-                    '    <td>{}</td>'.format(gid),
-                    '    <td>{}</td>'.format('U+' + unicode_mapping if unicode_mapping else '-'),
-                    '    <td><img src=\'{}\'></td>'.format(image_path),
-                    '    <td>{}</td>'.format(name_d),
-                    '    <td>{}</td>'.format(name_p),
-                    '  </tr>',
-                ])
-
-        if info['styleName'] == 'Regular':
             with open('TEMPLATE.html', 'r') as f:
                 template = f.read()
+
+            html_lines = []
+            for g in glyphs_of_interest:
+                html_lines.extend(generate_tr_lines(info, g))
+            html_lines.extend([
+                '  </table>',
+                '</p>',
+                '<p>EOF</p>',
+            ])
+
             html_name = '{}-{}.html'.format(
-                info['_familyName_postscript'],
-                info['_version'].replace('.', '_')
+                info._familyName_postscript,
+                info._version.replace('.', '_')
             )
-            html_path = os.path.join('dump', info['_familyName_postscript'], html_name)
+            html_path = os.path.join('dump', info._familyName_postscript, html_name)
+
             with open(html_path, 'w') as f:
                 f.write(template + '\n'.join(html_lines) + '\n')
+
+class FontInfo(object):
+
+    def __init__(self, font):
+
+        self.unitsPerEm   = font['head'].unitsPerEm
+        self.fontRevision = font['head'].fontRevision
+
+        self.openTypeHheaAscender  = font['hhea'].ascent
+        self.openTypeHheaDescender = font['hhea'].descent
+
+        self.familyName          = get_nameid(font, 16, 1)
+        self.styleName           = get_nameid(font, 17, 2)
+        self.openTypeNameVersion = get_nameid(font, 5)
+
+        if self.openTypeNameVersion.replace('.', '', 1).isalnum():
+            self._version = self.openTypeNameVersion
+        else:
+            self._version = '{:.3f}'.format(self.fontRevision)
+
+        self._familyName_postscript = self.familyName.replace(' ', '')
+        self._ascender  = self.openTypeHheaAscender
+        self._descender = self.openTypeHheaDescender
+
+class GlyphInfo(object):
+    def __init__(self, tag, glyph, gid, pname, dname, character, lsb=None, advance=None, rsb=None):
+        self.tag = tag
+        self.glyph = glyph
+        self.gid = gid
+        self.pname = pname
+        self.dname = dname
+        self.character = character
+        self.lsb = lsb
+        self.advance = advance
+        self.rsb = rsb
 
 def mkdir_p(directory):
     try:
@@ -382,13 +413,13 @@ def parse_goadb(path):
         content = line.partition('#')[0]
         if content:
             parts = content.split()
-            name_p = parts.pop(0)
-            name_d = parts.pop(0)
+            pname = parts.pop(0)
+            dname = parts.pop(0)
             if parts:
-                unicode_mapping = parts.pop(0)[3:]
+                character = parts.pop(0)[3:]
             else:
-                unicode_mapping = None
-            goadb.append((name_p, name_d, unicode_mapping))
+                character = None
+            goadb.append((pname, dname, character))
 
     return goadb
 
@@ -435,9 +466,53 @@ def draw_metrics(advance, advance_in_px, origin):
 
             restore()
 
+def dname_filter(dname):
+    is_kept = False
+    if dname.startswith(PREFIX) or (dname.partition('.')[0] in GENERAL_GLYPHS):
+        is_kept = True
+    return is_kept
+
+def generate_tr_lines(info, g):
+
+    attributes = ''
+    note = ''
+    if g.tag == '-':
+        attributes = ' class=\'missing\''
+        note = 'Missing'
+    elif g.tag == '+':
+        attributes = ' class=\'addition\''
+        note = 'Addition'
+
+    if g.glyph:
+        gid = g.gid
+        dump_name = str(g.gid).zfill(ZERO_PADDING_WIDTH)
+        if APPEND_THE_GLYPH_NAME:
+            dump_name += '.' + g.dname
+        image_path = os.path.join(
+            info.styleName,
+            info._version,
+            '{}'.format(FONT_SIZE),
+            dump_name + '.png',
+        )
+        img = '<img src=\'{}\'>'.format(image_path)
+    else:
+        gid = '-'
+        img = '-'
+    if g.character:
+        character = 'U+' + g.character
+    else:
+        character = '-'
+
+    lines = []
+    lines.append('    <tr{}>'.format(attributes))
+    for i in [gid, character, img, g.dname, g.pname, note]:
+        lines.append('      <td>{}</td>'.format(i))
+    lines.append('    </tr>')
+
+    return lines
 
 if __name__ == '__main__':
     start = time.clock()
     main()
     end = time.clock()
-    print end - start, 's'
+    print(end - start, 's')
