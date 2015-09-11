@@ -1,8 +1,19 @@
-# The Microsoft OpenType specification for Devanagari (new shaping behavior)
+# OpenType specification for Devanagari (new shaping behavior):
 # http://www.microsoft.com/typography/OpenTypeDev/devanagari/intro.htm
 
 languagesystem DFLT dflt;
 languagesystem dev2 dflt;
+
+
+# ---------------
+# LOCALIZED FORMS
+# ---------------
+
+# Localization Forms
+# ------------------
+
+# feature locl {
+# } locl;
 
 
 # -------------------
@@ -326,12 +337,29 @@ feature half {
 } half;
 
 
+# Vattu Variants
+# --------------
+
+# feature vatu {
+# } vatu;
+
+
+# Conjunct Forms
+# --------------
+
+# feature cjct {
+# } cjct;
+
+
 # ----------------------------
 # MANDATORY PRESENTATION FORMS
 # ----------------------------
 
-# Above-base Substitution
-# -----------------------
+# Pre-, Above-, Below-, and Post-base Substitution
+# ------------------------------------------------
+
+# feature pres {
+# } pres;
 
 @matra_vocalic_liquids = [dvmvR dvmvRR dvmvL dvmvLL];
 
@@ -356,10 +384,6 @@ feature abvs {
   } abvs_ra_matra_vocalic_liquids;
 } abvs;
 
-
-# Below-base Substitution
-# -----------------------
-
 feature blws {
   lookup blws {
     sub dvRA dvmU  by dvRA_mU;
@@ -371,3 +395,60 @@ feature blws {
     sub dvSHA' dvmvR by dvSHA.matravocalicr;
   } blws_contextual;
 } blws;
+
+# feature psts {
+# } psts;
+
+
+# Halant Forms
+# ------------
+
+# feature haln {
+# } haln;
+
+
+# Required Contextual Alternates
+# ------------------------------
+# Newly introduced.
+
+# feature rclt {
+# } rclt;
+
+
+# --------------------------------
+# DISCRETIONARY PRESENTATION FORMS
+# --------------------------------
+
+# Contextual Alternates
+# ---------------------
+
+# feature calt {
+# } calt;
+
+
+# -----------
+# POSITIONING
+# -----------
+
+# Kerning
+# -------
+
+# feature kern {
+# } kern;
+
+
+# Distances
+# ---------
+
+# feature dist {
+# } dist;
+
+
+# Above- and Below-base Mark Positioning
+# --------------------------------------
+
+# feature abvm {
+# } abvm;
+
+# feature blwm {
+# } blwm;
