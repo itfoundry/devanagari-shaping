@@ -1,0 +1,556 @@
+# [i] Adobe's practice is registering all Indic features also under <DFLT>.
+
+languagesystem DFLT dflt;
+
+# [i] OpenType specification for Devanagari (new shaping behavior):
+#     http://www.microsoft.com/typography/OpenTypeDev/devanagari/intro.htm
+
+languagesystem dev2 dflt;
+
+# [i] <deva> can be abandoned since <dev2> is now supported by all major
+#     environments (including Adobe's).
+
+
+# ---------------
+# LOCALIZED FORMS
+# ---------------
+
+# Localized Forms
+# ---------------
+
+# [i] Common Devanagari fonts don't need localized forms.
+
+# [i] Some commonly seen regional variants:
+#     - Northern: A (and AA, O, AU), vR (and vRR), vL (and vLL), (KHA), JHA,
+#       NNA, (One?), Five, Eight, Nine, (K_SSA), (J_NYA)...
+#     - Marathi: LA, SHA.
+
+# feature locl {
+# } locl;
+
+
+# -------------------
+# BASIC SHAPING FORMS
+# -------------------
+
+# Nukta Forms
+# -----------
+
+feature nukt {
+
+  # [i] Nukta forms should be available for all vowel and consonant letters.
+  #     Nukta forms of vowel letters (at least A, AA, I, II, U, UU, vR, vRR,
+  #     vL, vLL, E, AI, O, AU) and corresponding signs are used by some
+  #     minor languages.
+
+  # [i] The spec claims "all consonants, as well as akhand forms should
+  #     have an associated nukta form", however it doesn't seem to be necessary
+  #     to provide nukta forms for `K_SSA` and `J_NYA`.
+
+  # [i] It's possible to simply position nukta on plain letters, however
+  #     that method causes difficulty when forming ligatures.
+
+  lookup nukt {
+
+    # [i] Enumerating plain forms of all consonant letters.
+
+    sub dvKA   dvNukta by dvKxA;   # = QA
+    sub dvKHA  dvNukta by dvKHxA;  # = KHHA
+    sub dvGA   dvNukta by dvGxA;   # = GHHA
+    sub dvGHA  dvNukta by dvGHxA;
+    sub dvNGA  dvNukta by dvNGxA;
+    sub dvCA   dvNukta by dvCxA;
+    sub dvCHA  dvNukta by dvCHxA;
+    sub dvJA   dvNukta by dvJxA;   # = ZA
+    sub dvJHA  dvNukta by dvJHxA;
+    sub dvNYA  dvNukta by dvNYxA;
+    sub dvTTA  dvNukta by dvTTxA;
+    sub dvTTHA dvNukta by dvTTHxA;
+    sub dvDDA  dvNukta by dvDDxA;  # = DDDHA
+    sub dvDDHA dvNukta by dvDDHxA; # = RHA
+    sub dvNNA  dvNukta by dvNNxA;
+    sub dvTA   dvNukta by dvTxA;
+    sub dvTHA  dvNukta by dvTHxA;
+    sub dvDA   dvNukta by dvDxA;
+    sub dvDHA  dvNukta by dvDHxA;
+    sub dvNA   dvNukta by dvNxA;   # = NNNA
+    sub dvPA   dvNukta by dvPxA;
+    sub dvPHA  dvNukta by dvPHxA;  # = FA
+    sub dvBA   dvNukta by dvBxA;
+    sub dvBHA  dvNukta by dvBHxA;
+    sub dvMA   dvNukta by dvMxA;
+    sub dvYA   dvNukta by dvYxA;   # = YYA
+    sub dvRA   dvNukta by dvRxA;   # = RRA
+    sub dvLA   dvNukta by dvLxA;
+    sub dvVA   dvNukta by dvVxA;
+    sub dvSHA  dvNukta by dvSHxA;
+    sub dvSSA  dvNukta by dvSSxA;
+    sub dvSA   dvNukta by dvSxA;
+    sub dvHA   dvNukta by dvHxA;
+    sub dvLLA  dvNukta by dvLLxA;  # = LLLA
+
+  } nukt;
+
+} nukt;
+
+
+# Akhand Ligatures
+# ----------------
+
+feature akhn {
+
+  # [i] `K_SSA` and `J_NYA` are considered to be the only true akhand forms.
+
+  lookup akhn {
+
+    sub dvKA dvVirama dvSSA by dvK_SSA;
+    sub dvJA dvVirama dvNYA by dvJ_NYA;
+
+  } akhn;
+
+  # [i] Eyelash is actually a true half form, which should be implemented
+  #     in <half>, however it's a common practice to form ZWJ Eyelash in <akhn>.
+
+  lookup akhn_eyelash {
+
+    # [i] The ignore rule is to prevent Eyelash from forming in sequences like
+    #     <KA, Virama, RA, Virama, ZWJ> (a half rakar form).
+
+    ignore sub dvVirama dvRA' dvVirama' zerowidthjoiner;
+
+    sub dvRA' dvVirama' zerowidthjoiner by dvEyelash;
+
+  } akhn_eyelash;
+
+} akhn;
+
+
+# Reph Forms
+# ----------
+
+feature rphf {
+
+  lookup rphf {
+
+    sub dvRA dvVirama by dvReph;
+
+  } rphf;
+
+} rphf;
+
+
+# Rakar Forms
+# -----------
+
+feature rkrf {
+
+  # [i] When RAc2 is integrated into the base letter (eg, K_RA), a precomposed ligature is needed, otherwise RAc2 can be simply positioned on the base letter.
+
+  # [i] If the tailed style of CHA is used, precomposed ligatures CH_RA and
+  #     CHx_RA will be needed just like how DA is handled.
+
+  lookup rkrf {
+
+    sub dvKA   dvVirama dvRA by   dvK_RA;
+    sub dvKHA  dvVirama dvRA by  dvKH_RA;
+    sub dvGA   dvVirama dvRA by   dvG_RA;
+    sub dvGHA  dvVirama dvRA by  dvGH_RA;
+    # NGA
+    sub dvCA   dvVirama dvRA by   dvC_RA;
+    # CHA
+    sub dvJA   dvVirama dvRA by   dvJ_RA;
+    sub dvJHA  dvVirama dvRA by  dvJH_RA;
+    sub dvNYA  dvVirama dvRA by  dvNY_RA;
+    # TTA
+    # TTHA
+    # DDA
+    # DDHA
+    sub dvNNA  dvVirama dvRA by  dvNN_RA;
+    sub dvTA   dvVirama dvRA by   dvT_RA;
+    sub dvTHA  dvVirama dvRA by  dvTH_RA;
+    sub dvDA   dvVirama dvRA by   dvD_RA;
+    sub dvDHA  dvVirama dvRA by  dvDH_RA;
+    sub dvNA   dvVirama dvRA by   dvN_RA;
+    sub dvPA   dvVirama dvRA by   dvP_RA;
+    sub dvPHA  dvVirama dvRA by  dvPH_RA;
+    sub dvBA   dvVirama dvRA by   dvB_RA;
+    sub dvBHA  dvVirama dvRA by  dvBH_RA;
+    sub dvMA   dvVirama dvRA by   dvM_RA;
+    sub dvYA   dvVirama dvRA by   dvY_RA;
+    # RA: the first RA has become Reph.
+    sub dvLA   dvVirama dvRA by   dvL_RA;
+    sub dvVA   dvVirama dvRA by   dvV_RA;
+    sub dvSHA  dvVirama dvRA by  dvSH_RA;
+    sub dvSSA  dvVirama dvRA by  dvSS_RA;
+    sub dvSA   dvVirama dvRA by   dvS_RA;
+    sub dvHA   dvVirama dvRA by   dvH_RA;
+    # LLA
+
+    sub dvK_SSA dvVirama dvRA by dvK_SS_RA;
+    sub dvJ_NYA dvVirama dvRA by dvJ_NY_RA;
+
+    sub dvKxA   dvVirama dvRA by   dvKx_RA;
+    sub dvKHxA  dvVirama dvRA by  dvKHx_RA;
+    sub dvGxA   dvVirama dvRA by   dvGx_RA;
+    sub dvGHxA  dvVirama dvRA by  dvGHx_RA;
+    # NGxA
+    sub dvCxA   dvVirama dvRA by   dvCx_RA;
+    # CHxA
+    sub dvJxA   dvVirama dvRA by   dvJx_RA;
+    sub dvJHxA  dvVirama dvRA by  dvJHx_RA;
+    sub dvNYxA  dvVirama dvRA by  dvNYx_RA;
+    # TTxA
+    # TTHxA
+    # DDxA
+    # DDHxA
+    sub dvNNxA  dvVirama dvRA by  dvNNx_RA;
+    sub dvTxA   dvVirama dvRA by   dvTx_RA;
+    sub dvTHxA  dvVirama dvRA by  dvTHx_RA;
+    sub dvDxA   dvVirama dvRA by   dvDx_RA;
+    sub dvDHxA  dvVirama dvRA by  dvDHx_RA;
+    sub dvNxA   dvVirama dvRA by   dvNx_RA;
+    sub dvPxA   dvVirama dvRA by   dvPx_RA;
+    sub dvPHxA  dvVirama dvRA by  dvPHx_RA;
+    sub dvBxA   dvVirama dvRA by   dvBx_RA;
+    sub dvBHxA  dvVirama dvRA by  dvBHx_RA;
+    sub dvMxA   dvVirama dvRA by   dvMx_RA;
+    sub dvYxA   dvVirama dvRA by   dvYx_RA;
+    # RxA
+    sub dvLxA   dvVirama dvRA by   dvLx_RA;
+    sub dvVxA   dvVirama dvRA by   dvVx_RA;
+    sub dvSHxA  dvVirama dvRA by  dvSHx_RA;
+    sub dvSSxA  dvVirama dvRA by  dvSSx_RA;
+    sub dvSxA   dvVirama dvRA by   dvSx_RA;
+    sub dvHxA   dvVirama dvRA by   dvHx_RA;
+    # LLxA
+
+  } rkrf;
+
+} rkrf;
+
+
+# Below-base Forms
+# ----------------
+
+feature blwf {
+
+  lookup blwf {
+
+    sub dvVirama dvRA by dvRAc2;
+
+  } blwf;
+
+} blwf;
+
+
+# Half Forms
+# ----------
+
+feature half {
+
+  # [i] IMPORTANT:
+  #     If a ligature is formed here, it's considered a "half form" by
+  #     the OTL engine no matter it has a visible Virama or not, and it'll
+  #     affect the reordering of pre-base glyphs (especially mI).
+
+  # [i] When a true half form is available, a precomposed ligature is needed,
+  #     otherwise Virama can be simply positioned on the base letter.
+
+  # [i] CHA and HA do not necessarily have a true half form.
+
+  lookup half {
+
+    sub dvKA   dvVirama by dvK;
+    sub dvKHA  dvVirama by dvKH;
+    sub dvGA   dvVirama by dvG;
+    sub dvGHA  dvVirama by dvGH;
+    # NGA
+    sub dvCA   dvVirama by dvC;
+    sub dvCHA  dvVirama by dvCH;
+    sub dvJA   dvVirama by dvJ;
+    sub dvJHA  dvVirama by dvJH;
+    sub dvNYA  dvVirama by dvNY;
+    # TTA
+    # TTHA
+    # DDA
+    # DDHA
+    sub dvNNA  dvVirama by dvNN;
+    sub dvTA   dvVirama by dvT;
+    sub dvTHA  dvVirama by dvTH;
+    # DA
+    sub dvDHA  dvVirama by dvDH;
+    sub dvNA   dvVirama by dvN;
+    sub dvPA   dvVirama by dvP;
+    sub dvPHA  dvVirama by dvPH;
+    sub dvBA   dvVirama by dvB;
+    sub dvBHA  dvVirama by dvBH;
+    sub dvMA   dvVirama by dvM;
+    sub dvYA   dvVirama by dvY;
+    sub dvRA   dvVirama by dvR;
+      # [i] Ideally RA doesn't need to form this, however Core Text has
+      #     a reordering bug (eg, characters <KA, Virama, RA, YA, mI>) which
+      #     can be partially patched by this hack.
+      # [i] Eyelash could also be formed here.
+    sub dvLA   dvVirama by dvL;
+    sub dvVA   dvVirama by dvV;
+    sub dvSHA  dvVirama by dvSH;
+    sub dvSSA  dvVirama by dvSS;
+    sub dvSA   dvVirama by dvS;
+    # HA
+    sub dvLLA  dvVirama by dvLL;
+
+    sub dvKxA   dvVirama by dvKx;
+    sub dvKHxA  dvVirama by dvKHx;
+    sub dvGxA   dvVirama by dvGx;
+    sub dvGHxA  dvVirama by dvGHx;
+    # NGxA
+    sub dvCxA   dvVirama by dvCx;
+    sub dvCHxA  dvVirama by dvCHx;
+    sub dvJxA   dvVirama by dvJx;
+    sub dvJHxA  dvVirama by dvJHx;
+    sub dvNYxA  dvVirama by dvNYx;
+    # TTxA
+    # TTHxA
+    # DDxA
+    # DDHxA
+    sub dvNNxA  dvVirama by dvNNx;
+    sub dvTxA   dvVirama by dvTx;
+    sub dvTHxA  dvVirama by dvTHx;
+    # DxA
+    sub dvDHxA  dvVirama by dvDHx;
+    sub dvNxA   dvVirama by dvNx;
+    sub dvPxA   dvVirama by dvPx;
+    sub dvPHxA  dvVirama by dvPHx;
+    sub dvBxA   dvVirama by dvBx;
+    sub dvBHxA  dvVirama by dvBHx;
+    sub dvMxA   dvVirama by dvMx;
+    sub dvYxA   dvVirama by dvYx;
+    sub dvRxA   dvVirama by dvEyelash; # [i] The legacy Eyelash sequence.
+    sub dvLxA   dvVirama by dvLx;
+    sub dvVxA   dvVirama by dvVx;
+    sub dvSHxA  dvVirama by dvSHx;
+    sub dvSSxA  dvVirama by dvSSx;
+    sub dvSxA   dvVirama by dvSx;
+    # HxA
+    sub dvLLxA  dvVirama by dvLLx;
+
+    sub dvK_SSA dvVirama by dvK_SS;
+    sub dvJ_NYA dvVirama by dvJ_NY;
+
+    sub   dvK_RA dvVirama by   dvK_R;
+    sub  dvKH_RA dvVirama by  dvKH_R;
+    sub   dvG_RA dvVirama by   dvG_R;
+    sub  dvGH_RA dvVirama by  dvGH_R;
+    # NG_RA
+    sub   dvC_RA dvVirama by   dvC_R;
+    sub  dvCH_RA dvVirama by  dvCH_R;
+    sub   dvJ_RA dvVirama by   dvJ_R;
+    sub  dvJH_RA dvVirama by  dvJH_R;
+    sub  dvNY_RA dvVirama by  dvNY_R;
+    # TT_RA
+    # TTH_RA
+    # DD_RA
+    # DDH_RA
+    sub  dvNN_RA dvVirama by  dvNN_R;
+    sub   dvT_RA dvVirama by   dvT_R;
+    sub  dvTH_RA dvVirama by  dvTH_R;
+    # D_RA
+    sub  dvDH_RA dvVirama by  dvDH_R;
+    sub   dvN_RA dvVirama by   dvN_R;
+    sub   dvP_RA dvVirama by   dvP_R;
+    sub  dvPH_RA dvVirama by  dvPH_R;
+    sub   dvB_RA dvVirama by   dvB_R;
+    sub  dvBH_RA dvVirama by  dvBH_R;
+    sub   dvM_RA dvVirama by   dvM_R;
+    sub   dvY_RA dvVirama by   dvY_R;
+    # R_RA
+    sub   dvL_RA dvVirama by   dvL_R;
+    sub   dvV_RA dvVirama by   dvV_R;
+    sub  dvSH_RA dvVirama by  dvSH_R;
+    sub  dvSS_RA dvVirama by  dvSS_R;
+    sub   dvS_RA dvVirama by   dvS_R;
+    # H_RA
+    sub  dvLL_RA dvVirama by  dvLL_R;
+
+    sub   dvKx_RA dvVirama by   dvKx_R;
+    sub  dvKHx_RA dvVirama by  dvKHx_R;
+    sub   dvGx_RA dvVirama by   dvGx_R;
+    sub  dvGHx_RA dvVirama by  dvGHx_R;
+    # NGx_RA
+    sub   dvCx_RA dvVirama by   dvCx_R;
+    sub  dvCHx_RA dvVirama by  dvCHx_R;
+    sub   dvJx_RA dvVirama by   dvJx_R;
+    sub  dvJHx_RA dvVirama by  dvJHx_R;
+    sub  dvNYx_RA dvVirama by  dvNYx_R;
+    # TTx_RA
+    # TTHx_RA
+    # DDx_RA
+    # DDHx_RA
+    sub  dvNNx_RA dvVirama by  dvNNx_R;
+    sub   dvTx_RA dvVirama by   dvTx_R;
+    sub  dvTHx_RA dvVirama by  dvTHx_R;
+    # Dx_RA
+    sub  dvDHx_RA dvVirama by  dvDHx_R;
+    sub   dvNx_RA dvVirama by   dvNx_R;
+    sub   dvPx_RA dvVirama by   dvPx_R;
+    sub  dvPHx_RA dvVirama by  dvPHx_R;
+    sub   dvBx_RA dvVirama by   dvBx_R;
+    sub  dvBHx_RA dvVirama by  dvBHx_R;
+    sub   dvMx_RA dvVirama by   dvMx_R;
+    sub   dvYx_RA dvVirama by   dvYx_R;
+    # Rx_RA
+    sub   dvLx_RA dvVirama by   dvLx_R;
+    sub   dvVx_RA dvVirama by   dvVx_R;
+    sub  dvSHx_RA dvVirama by  dvSHx_R;
+    sub  dvSSx_RA dvVirama by  dvSSx_R;
+    sub   dvSx_RA dvVirama by   dvSx_R;
+    # Hx_RA
+    sub  dvLLx_RA dvVirama by  dvLLx_R;
+
+    sub dvK_SS_RA dvVirama by dvK_SS_R;
+    sub dvJ_NY_RA dvVirama by dvJ_NY_R;
+
+  } half;
+
+} half;
+
+
+# Vattu Variants
+# --------------
+
+# feature vatu {
+# } vatu;
+
+
+# Conjunct Forms
+# --------------
+
+# feature cjct {
+# } cjct;
+
+
+# ----------------------------
+# MANDATORY PRESENTATION FORMS
+# ----------------------------
+
+# Pre-, Above-, Below-, and Post-base Substitution
+# ------------------------------------------------
+
+# feature pres {
+# } pres;
+
+# [i] The hack `lookup abvs_ra_matra_vocalic_liquids` transforms a glyph
+#     sequence <RA, vocalic liquid sign> to <vocalic liquid letter, Reph>
+#     so precomposed ligatures are not needed to form these special structures,
+#     and the Reph can goes on to form ligatures properly with Anusvara or
+#     Candrabindu.
+
+# [i] This special shaping of sound sequence <r, vocalic liquid> is often
+#     missing in fonts.
+
+@matra_vocalic_liquids = [dvmvR dvmvRR dvmvL dvmvLL];
+
+lookup CONTEXTUAL_ra_to_vocalic_liquid {
+  sub dvRA' dvmvR  by dvvR;
+  sub dvRA' dvmvRR by dvvRR;
+  sub dvRA' dvmvL  by dvvL;
+  sub dvRA' dvmvLL by dvvLL;
+} CONTEXTUAL_ra_to_vocalic_liquid;
+
+lookup CONTEXTUAL_matra_vocalic_liquid_to_reph {
+  sub @matra_vocalic_liquids by dvReph;
+} CONTEXTUAL_matra_vocalic_liquid_to_reph;
+
+feature abvs {
+
+  lookup abvs_ra_matra_vocalic_liquids {
+
+    sub
+      dvRA'
+      lookup CONTEXTUAL_ra_to_vocalic_liquid
+      @matra_vocalic_liquids'
+      lookup CONTEXTUAL_matra_vocalic_liquid_to_reph;
+
+  } abvs_ra_matra_vocalic_liquids;
+
+} abvs;
+
+feature blws {
+
+  lookup blws {
+
+    # [i] The only three required consonant-vowel ligatures which
+    #     can't be formed by mark positioning.
+
+    sub dvRA dvmU  by dvRA_mU;
+    sub dvRA dvmUU by dvRA_mUU;
+    sub dvHA dvmvR by dvHA_mvR;
+
+  } blws;
+
+  lookup blws_contextual {
+
+    # [i] This special shaping of RA above mvR, etc, is often missing in fonts.
+
+    sub dvSHA' [dvmvR dvmvRR] by dvSHA.matravocalicr;
+
+  } blws_contextual;
+
+} blws;
+
+# feature psts {
+# } psts;
+
+
+# Halant Forms
+# ------------
+
+# feature haln {
+# } haln;
+
+
+# Required Contextual Alternates
+# ------------------------------
+# Newly introduced.
+
+# feature rclt {
+# } rclt;
+
+
+# --------------------------------
+# DISCRETIONARY PRESENTATION FORMS
+# --------------------------------
+
+# Contextual Alternates
+# ---------------------
+
+# feature calt {
+# } calt;
+
+
+# -----------
+# POSITIONING
+# -----------
+
+# Kerning
+# -------
+
+# feature kern {
+# } kern;
+
+
+# Distances
+# ---------
+
+# feature dist {
+# } dist;
+
+
+# Above- and Below-base Mark Positioning
+# --------------------------------------
+
+# feature abvm {
+# } abvm;
+
+# feature blwm {
+# } blwm;
