@@ -256,7 +256,7 @@ feature half {
   # [i] When a true half form is available, a precomposed ligature is needed,
   #     otherwise Virama can be simply positioned on the base letter.
 
-  # [i] CHA does not necessarily have a true half form.
+  # [i] CHA and HA do not necessarily have a true half form.
 
   lookup half {
 
@@ -288,7 +288,8 @@ feature half {
     sub dvYA   dvVirama by dvY;
     sub dvRA   dvVirama by dvR;
       # [i] Ideally RA doesn't need to form this, however Core Text has
-      #     a reordering bug which can be partially patched by this hack.
+      #     a reordering bug (eg, characters <KA, Virama, RA, YA, mI>) which
+      #     can be partially patched by this hack.
       # [i] Eyelash could also be formed here.
     sub dvLA   dvVirama by dvL;
     sub dvVA   dvVirama by dvV;
@@ -340,20 +341,20 @@ feature half {
     sub  dvKH_RA dvVirama by  dvKH_R;
     sub   dvG_RA dvVirama by   dvG_R;
     sub  dvGH_RA dvVirama by  dvGH_R;
-    # sub  dvNG_RA dvVirama by  dvNG_R;
+    # NG_RA
     sub   dvC_RA dvVirama by   dvC_R;
     sub  dvCH_RA dvVirama by  dvCH_R;
     sub   dvJ_RA dvVirama by   dvJ_R;
     sub  dvJH_RA dvVirama by  dvJH_R;
     sub  dvNY_RA dvVirama by  dvNY_R;
-    # sub  dvTT_RA dvVirama by  dvTT_R;
-    # sub dvTTH_RA dvVirama by dvTTH_R;
-    # sub  dvDD_RA dvVirama by  dvDD_R;
-    # sub dvDDH_RA dvVirama by dvDDH_R;
+    # TT_RA
+    # TTH_RA
+    # DD_RA
+    # DDH_RA
     sub  dvNN_RA dvVirama by  dvNN_R;
     sub   dvT_RA dvVirama by   dvT_R;
     sub  dvTH_RA dvVirama by  dvTH_R;
-    # sub   dvD_RA dvVirama by   dvD_R;
+    # D_RA
     sub  dvDH_RA dvVirama by  dvDH_R;
     sub   dvN_RA dvVirama by   dvN_R;
     sub   dvP_RA dvVirama by   dvP_R;
@@ -362,33 +363,33 @@ feature half {
     sub  dvBH_RA dvVirama by  dvBH_R;
     sub   dvM_RA dvVirama by   dvM_R;
     sub   dvY_RA dvVirama by   dvY_R;
-    # sub dvR_RA dvVirama by dvR_R; # Reph
+    # R_RA
     sub   dvL_RA dvVirama by   dvL_R;
     sub   dvV_RA dvVirama by   dvV_R;
     sub  dvSH_RA dvVirama by  dvSH_R;
     sub  dvSS_RA dvVirama by  dvSS_R;
     sub   dvS_RA dvVirama by   dvS_R;
-    # sub   dvH_RA dvVirama by   dvH_R;
+    # H_RA
     sub  dvLL_RA dvVirama by  dvLL_R;
 
     sub   dvKx_RA dvVirama by   dvKx_R;
     sub  dvKHx_RA dvVirama by  dvKHx_R;
     sub   dvGx_RA dvVirama by   dvGx_R;
     sub  dvGHx_RA dvVirama by  dvGHx_R;
-    # sub  dvNGx_RA dvVirama by  dvNGx_R;
+    # NGx_RA
     sub   dvCx_RA dvVirama by   dvCx_R;
     sub  dvCHx_RA dvVirama by  dvCHx_R;
     sub   dvJx_RA dvVirama by   dvJx_R;
     sub  dvJHx_RA dvVirama by  dvJHx_R;
     sub  dvNYx_RA dvVirama by  dvNYx_R;
-    # sub  dvTTx_RA dvVirama by  dvTTx_R;
-    # sub dvTTHx_RA dvVirama by dvTTHx_R;
-    # sub  dvDDx_RA dvVirama by  dvDDx_R;
-    # sub dvDDHx_RA dvVirama by dvDDHx_R;
+    # TTx_RA
+    # TTHx_RA
+    # DDx_RA
+    # DDHx_RA
     sub  dvNNx_RA dvVirama by  dvNNx_R;
     sub   dvTx_RA dvVirama by   dvTx_R;
     sub  dvTHx_RA dvVirama by  dvTHx_R;
-    # sub   dvDx_RA dvVirama by   dvDx_R;
+    # Dx_RA
     sub  dvDHx_RA dvVirama by  dvDHx_R;
     sub   dvNx_RA dvVirama by   dvNx_R;
     sub   dvPx_RA dvVirama by   dvPx_R;
@@ -397,19 +398,20 @@ feature half {
     sub  dvBHx_RA dvVirama by  dvBHx_R;
     sub   dvMx_RA dvVirama by   dvMx_R;
     sub   dvYx_RA dvVirama by   dvYx_R;
-    # sub   dvRx_RA dvVirama by   dvRx_R; # !!
+    # Rx_RA
     sub   dvLx_RA dvVirama by   dvLx_R;
     sub   dvVx_RA dvVirama by   dvVx_R;
     sub  dvSHx_RA dvVirama by  dvSHx_R;
     sub  dvSSx_RA dvVirama by  dvSSx_R;
     sub   dvSx_RA dvVirama by   dvSx_R;
-    # sub   dvHx_RA dvVirama by   dvHx_R;
+    # Hx_RA
     sub  dvLLx_RA dvVirama by  dvLLx_R;
 
     sub dvK_SS_RA dvVirama by dvK_SS_R;
     sub dvJ_NY_RA dvVirama by dvJ_NY_R;
 
   } half;
+
 } half;
 
 
@@ -437,6 +439,15 @@ feature half {
 # feature pres {
 # } pres;
 
+# [i] The hack `lookup abvs_ra_matra_vocalic_liquids` transforms a glyph
+#     sequence <RA, vocalic liquid sign> to <vocalic liquid letter, Reph>
+#     so precomposed ligatures are not needed to form these special structures,
+#     and the Reph can goes on to form ligatures properly with Anusvara or
+#     Candrabindu.
+
+# [i] This special shaping of sound sequence <r, vocalic liquid> is often
+#     missing in fonts.
+
 @matra_vocalic_liquids = [dvmvR dvmvRR dvmvL dvmvLL];
 
 lookup CONTEXTUAL_ra_to_vocalic_liquid {
@@ -451,25 +462,40 @@ lookup CONTEXTUAL_matra_vocalic_liquid_to_reph {
 } CONTEXTUAL_matra_vocalic_liquid_to_reph;
 
 feature abvs {
+
   lookup abvs_ra_matra_vocalic_liquids {
+
     sub
       dvRA'
       lookup CONTEXTUAL_ra_to_vocalic_liquid
       @matra_vocalic_liquids'
       lookup CONTEXTUAL_matra_vocalic_liquid_to_reph;
+
   } abvs_ra_matra_vocalic_liquids;
+
 } abvs;
 
 feature blws {
+
   lookup blws {
+
+    # [i] The only three required consonant-vowel ligatures which
+    #     can't be formed by mark positioning.
+
     sub dvRA dvmU  by dvRA_mU;
     sub dvRA dvmUU by dvRA_mUU;
     sub dvHA dvmvR by dvHA_mvR;
+
   } blws;
 
   lookup blws_contextual {
-    sub dvSHA' dvmvR by dvSHA.matravocalicr;
+
+    # [i] This special shaping of RA above mvR, etc, is often missing in fonts.
+
+    sub dvSHA' [dvmvR dvmvRR] by dvSHA.matravocalicr;
+
   } blws_contextual;
+
 } blws;
 
 # feature psts {
