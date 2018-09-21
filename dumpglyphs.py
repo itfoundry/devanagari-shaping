@@ -281,7 +281,7 @@ def main():
 
                     # Save the file
 
-                    saveImage(os.path.join(dump_directory, dump_name + '.png'))
+                    saveImage(os.path.join(dump_directory, dump_name + '.svg'))
 
                     # Clear the canvas
 
@@ -492,7 +492,7 @@ def generate_tr_lines(info, g):
             info.styleName,
             info._version,
             '{}'.format(FONT_SIZE),
-            dump_name + '.png',
+            dump_name + '.svg',
         )
         img = '<img src=\'{}\'>'.format(image_path)
     else:
