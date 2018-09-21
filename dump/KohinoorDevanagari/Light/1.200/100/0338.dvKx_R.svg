@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg height="200.0" version="1.1" width="82.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <path d="M0,0 l82,0 l0,200 l-82,0 Z M0,0" fill="rgb(255,255,255)" transform="matrix(1,0,0,-1,0.0,200.0)"/>
+ <path d="M0,0 l82,0" fill="none" stroke="rgb(229,229,229)" stroke-width="2" transform="matrix(1,0,0,-1,0.0,135.0)"/>
+ <path d="M0,1 l0,-5" fill="none" stroke="rgb(204,204,204)" stroke-width="2" transform="matrix(1,0,0,-1,7.0,135.0)"/>
+ <path d="M0,1 l0,-5" fill="none" stroke="rgb(204,204,204)" stroke-width="2" transform="matrix(1,0,0,-1,66.0,135.0)"/>
+ <path d="M554,464 c-74,0,-117,-35,-136,-62 l-4,0 l0,180 l198,0 l0,52 l-632,0 l0,-52 l377,0 l0,-259 c0,-81,-53,-135,-127,-135 c-67,0,-114,47,-114,112 c0,72,55,123,152,109 l-9,55 c-113,14,-205,-56,-205,-165 c0,-100,77,-157,147,-160 l0,-4 l-146,-94 l49,-42 l249,187 l4,0 l0,-186 l57,0 l0,274 c0,81,52,135,128,135 c48,0,86,-24,103,-62 l49,39 c-29,49,-82,78,-140,78 Z M212,-22 c0,-24,17,-41,41,-41 c24,0,41,17,41,41 c0,24,-17,41,-41,41 c-24,0,-41,-17,-41,-41 Z M212,-22" fill="rgb(0,0,0)" transform="matrix(0.1,0.0,0.0,-0.1,7.0,135.0)"/>
+</svg>
