@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg height="200.0" version="1.1" width="80.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
- <path d="M0,0 l80,0 l0,200 l-80,0 Z M0,0" fill="rgb(255,255,255)" transform="matrix(1,0,0,-1,0.0,200.0)"/>
- <path d="M0,0 l80,0" fill="none" stroke="rgb(229,229,229)" stroke-width="2" transform="matrix(1,0,0,-1,0.0,135.0)"/>
- <path d="M0,1 l0,-5" fill="none" stroke="rgb(204,204,204)" stroke-width="2" transform="matrix(1,0,0,-1,8.0,135.0)"/>
- <path d="M0,1 l0,-5" fill="none" stroke="rgb(204,204,204)" stroke-width="2" transform="matrix(1,0,0,-1,73.0,135.0)"/>
- <path d="M452,155 l0,-155 l117,0 l0,568 l111,0 l0,92 l-707,0 l0,-92 l129,0 l0,-4 c-19,-14,-38,-38,-38,-75 c0,-61,46,-98,102,-102 l0,-4 c-43,-13,-93,-47,-93,-121 c0,-83,66,-132,145,-135 l0,-4 l-45,-26 l-61,-40 l-20,-72 c26,-50,87,-75,140,-73 l34,46 l-36,56 l218,141 Z M295,198 c-76,0,-103,36,-103,73 c0,40,28,68,91,68 l55,0 l0,91 l-62,0 c-63,0,-91,29,-91,68 c0,40,27,70,84,70 l184,0 l0,-291 c-16,-29,-77,-79,-158,-79 Z M295,198" fill="rgb(0,0,0)" transform="matrix(0.1,0.0,0.0,-0.1,8.0,135.0)"/>
-</svg>

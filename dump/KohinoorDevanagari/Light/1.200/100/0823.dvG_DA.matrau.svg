@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg height="200.0" version="1.1" width="96.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
- <path d="M0,0 l96,0 l0,200 l-96,0 Z M0,0" fill="rgb(255,255,255)" transform="matrix(1,0,0,-1,0.0,200.0)"/>
- <path d="M0,0 l96,0" fill="none" stroke="rgb(229,229,229)" stroke-width="2" transform="matrix(1,0,0,-1,0.0,135.0)"/>
- <path d="M0,1 l0,-5" fill="none" stroke="rgb(204,204,204)" stroke-width="2" transform="matrix(1,0,0,-1,7.0,135.0)"/>
- <path d="M0,1 l0,-5" fill="none" stroke="rgb(204,204,204)" stroke-width="2" transform="matrix(1,0,0,-1,90.0,135.0)"/>
- <path d="M784,-105 l-57,233 c15,13,32,39,32,79 c0,38,-25,66,-43,74 l-46,-17 l0,-103 c-17,-15,-52,-26,-96,-26 c-90,0,-150,66,-150,142 c0,56,27,93,111,114 l162,40 l0,151 l148,0 l0,52 l-865,0 l0,-52 l149,0 l0,-213 l-57,-40 c1,-41,17,-85,48,-112 l67,0 l0,365 l452,0 l0,-110 l-129,-32 c-96,-24,-148,-77,-148,-159 c0,-94,78,-201,221,-201 c37,0,71,6,98,20 l20,-135 Z M784,-105" fill="rgb(0,0,0)" transform="matrix(0.1,0.0,0.0,-0.1,7.0,135.0)"/>
-</svg>
