@@ -15,8 +15,6 @@ except ImportError:
 else:
     in_drawbot = True
 
-# WARNING: It takes around 17 seconds to dump 1000 glyphs.
-
 # BASIC OPTIONS
 
 # INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
@@ -36,10 +34,6 @@ SHOW_ADVANCE = False
 
 LINE_HEIGHT_PERCENTAGE = 2.0
 
-MARGIN_HORIZONTAL = 5 # px
-VERTICAL_OFFSET_PERCENTAGE = -0.1
-
-
 def main():
 
     for font_path in get_font_paths(INPUT_PATH):
@@ -51,13 +45,6 @@ def main():
         # Get font information
 
         info = FontInfo(font)
-
-        # Calculate some basic drawing parameters
-
-        lhp = LINE_HEIGHT_PERCENTAGE
-        vop = VERTICAL_OFFSET_PERCENTAGE
-        asc = info._ascender
-        des = abs(info._descender)
 
         # Prepare the directory
 
@@ -84,13 +71,13 @@ def main():
 
         font_dnames = [p2d_map[pname] for pname in font.getGlyphOrder()]
 
-        glyphs_of_interest = []
+        glyphs = []
         for dname in font_dnames:
             pname = d2p_map.get(dname)
             character = d2u_map.get(dname)
             glyph = font_glyph_set[pname]
             gid = font.getGlyphID(pname)
-            glyphs_of_interest.append(
+            glyphs.append(
                 GlyphInfo(glyph, gid, pname, dname, character, lsb=None, advance=None, rsb=None)
             )
 
@@ -101,7 +88,7 @@ def main():
         bounds_right = []
         bounds_top = []
 
-        for g in glyphs_of_interest:
+        for g in glyphs:
 
             pen_bounds = BoundsPen(font_glyph_set)
             g.glyph.draw(pen_bounds)
@@ -128,7 +115,7 @@ def main():
 
         # Glyph drawing loop
 
-        for g in glyphs_of_interest:
+        for g in glyphs:
 
             # Genrate the file name
 
@@ -140,8 +127,6 @@ def main():
 
             page_width = abs(canvas_bounds[0]) + canvas_bounds[2]
             page_height = abs(canvas_bounds[1]) + canvas_bounds[3]
-
-            advance_in_px = g.advance
 
             origin = {"x": abs(canvas_bounds[0]), "y": abs(canvas_bounds[1])}
 
@@ -169,7 +154,7 @@ def main():
                 fill(None)
                 strokeWidth(STROKE_WIDTH)
 
-                draw_metrics(g.advance, advance_in_px, origin)
+                draw_metrics(g.advance, origin)
 
                 restore()
 
@@ -196,7 +181,7 @@ def main():
             template = f.read()
 
         html_lines = []
-        for g in glyphs_of_interest:
+        for g in glyphs:
             html_lines.extend(generate_tr_lines(info, g))
         html_lines.extend([
             '  </table>',
@@ -325,7 +310,7 @@ def parse_goadb(path):
 
     return goadb
 
-def draw_metrics(advance, advance_in_px, origin):
+def draw_metrics(advance, origin):
 
     if SHOW_BASELINE:
 
@@ -359,7 +344,7 @@ def draw_metrics(advance, advance_in_px, origin):
                 line((0, STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
 
             save()
-            translate(advance_in_px, 0)
+            translate(g.advance, 0)
 
             if not SHOW_BASELINE:
                 line((-STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
