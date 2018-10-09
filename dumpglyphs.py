@@ -2,6 +2,20 @@
 
 from __future__ import division, print_function, unicode_literals
 
+# BASIC OPTIONS
+
+# INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
+# or a directory containing OTF/TTF/OTC/TTC files.
+
+INPUT_PATH = 'input/'
+
+ZERO_PADDING_WIDTH = 4
+APPEND_THE_GLYPH_NAME = True
+
+STROKE_WIDTH = 10 # px
+SHOW_BASELINE = True
+SHOW_ADVANCE = True
+
 import os, subprocess, time, difflib
 
 from fontTools.ttLib import TTFont
@@ -14,21 +28,6 @@ except ImportError:
     in_drawbot = False
 else:
     in_drawbot = True
-
-# BASIC OPTIONS
-
-# INPUT_PATH can point to either an OTF/TTF file, an OTC/TTC file,
-# or a directory containing OTF/TTF/OTC/TTC files.
-
-INPUT_PATH = 'input/KohinoorDevanagari/build20x/KohinoorDevanagari-Bold.otf'
-GOADB_PATH = 'input/KohinoorDevanagari/build20x/GlyphOrderAndAliasDB'
-
-ZERO_PADDING_WIDTH = 4
-APPEND_THE_GLYPH_NAME = True
-
-STROKE_WIDTH = 10 # px
-SHOW_BASELINE = False
-SHOW_ADVANCE = False
 
 def main():
 
@@ -49,32 +48,22 @@ def main():
             info._familyName_postscript,
             info.styleName,
             info._version,
-            '{}'.format(info.unitsPerEm),
         )
         mkdir_p(dump_directory)
 
-        # Initiate the glyph set
-
-        font_glyph_set = font.getGlyphSet()
-
         # Prepare the glyph list
 
-        goadb = parse_goadb(GOADB_PATH)
-        goadb_dnames = [d for p, d, u in goadb]
-        p2d_map = {p: d for p, d, u in goadb}
-        d2p_map = {d: p for p, d, u in goadb}
-        d2u_map = {d: u for p, d, u in goadb}
-
-        font_dnames = [p2d_map[pname] for pname in font.getGlyphOrder()]
+        glyphs_in_font = font.getGlyphSet()
+        glyph_names = font.getGlyphOrder()
+        reversed_cmap = font["cmap"].buildReversed()
 
         glyphs = []
-        for dname in font_dnames:
-            pname = d2p_map.get(dname)
-            character = d2u_map.get(dname)
-            glyph = font_glyph_set[pname]
-            gid = font.getGlyphID(pname)
+        for name in glyph_names:
+            gid = font.getGlyphID(name)
+            codepoints = reversed_cmap.get(name)
+            glyph = glyphs_in_font[name]
             glyphs.append(
-                GlyphInfo(glyph, gid, pname, dname, character, lsb=None, advance=None, rsb=None)
+                GlyphInfo(glyph, gid, name, codepoints, lsb=None, advance=None, rsb=None)
             )
 
         # Glyph metrics loop
@@ -86,7 +75,7 @@ def main():
 
         for g in glyphs:
 
-            pen_bounds = BoundsPen(font_glyph_set)
+            pen_bounds = BoundsPen(glyphs_in_font)
             g.glyph.draw(pen_bounds)
             bounds = pen_bounds.bounds
 
@@ -117,7 +106,7 @@ def main():
 
             dump_name = str(g.gid).zfill(ZERO_PADDING_WIDTH)
             if APPEND_THE_GLYPH_NAME:
-                dump_name += '.' + g.dname
+                dump_name += '.' + g.name
 
             # Calculate drawing parameters
 
@@ -159,7 +148,7 @@ def main():
                 save()
                 translate(origin['x'], origin['y'])
 
-                pen_path = CocoaPen(font_glyph_set)
+                pen_path = CocoaPen(glyphs_in_font)
                 g.glyph.draw(pen_path)
                 drawPath(pen_path.path)
 
@@ -172,6 +161,8 @@ def main():
                 # Clear the canvas
 
                 newDrawing()
+
+        # Generate the HTML chart
 
         with open('TEMPLATE.html', 'r') as f:
             template = f.read()
@@ -199,7 +190,6 @@ class FontInfo(object):
 
     def __init__(self, font):
 
-        self.unitsPerEm   = font['head'].unitsPerEm
         self.fontRevision = font['head'].fontRevision
 
         self.openTypeHheaAscender  = font['hhea'].ascent
@@ -219,12 +209,11 @@ class FontInfo(object):
         self._descender = self.openTypeHheaDescender
 
 class GlyphInfo(object):
-    def __init__(self, glyph, gid, pname, dname, character, lsb=None, advance=None, rsb=None):
+    def __init__(self, glyph, gid, name, codepoints, lsb=None, advance=None, rsb=None):
         self.glyph = glyph
         self.gid = gid
-        self.pname = pname
-        self.dname = dname
-        self.character = character
+        self.name = name
+        self.codepoints = codepoints
         self.lsb = lsb
         self.advance = advance
         self.rsb = rsb
@@ -285,27 +274,6 @@ def get_nameid(font, nameid, nameid_fallback=None):
 
     return content
 
-def parse_goadb(path):
-
-    with open(path, 'r') as f:
-        goadb_content = f.read()
-
-    goadb = []
-
-    for line in goadb_content.splitlines():
-        content = line.partition('#')[0]
-        if content:
-            parts = content.split()
-            pname = parts.pop(0)
-            dname = parts.pop(0)
-            if parts:
-                character = parts.pop(0)[3:]
-            else:
-                character = None
-            goadb.append((pname, dname, character))
-
-    return goadb
-
 def draw_metrics(advance, origin):
 
     if SHOW_BASELINE:
@@ -358,25 +326,24 @@ def generate_tr_lines(info, g):
         gid = g.gid
         dump_name = str(g.gid).zfill(ZERO_PADDING_WIDTH)
         if APPEND_THE_GLYPH_NAME:
-            dump_name += '.' + g.dname
+            dump_name += '.' + g.name
         image_path = os.path.join(
             info.styleName,
             info._version,
-            '{}'.format(info.unitsPerEm),
             dump_name + '.svg',
         )
         img = '<img src=\'{}\'>'.format(image_path)
     else:
         gid = '-'
         img = '-'
-    if g.character:
-        character = 'U+' + g.character
+    if g.codepoints:
+        unicode_mapping = ", ".join('U+' + hex(i)[2:].zfill(4).upper() for i in sorted(g.codepoints))
     else:
-        character = '-'
+        unicode_mapping = '-'
 
     lines = []
     lines.append('    <tr{}>'.format(attributes))
-    for i in [gid, character, img, g.dname, g.pname, note]:
+    for i in [gid, img, unicode_mapping, g.name, note]:
         lines.append('      <td>{}</td>'.format(i))
     lines.append('    </tr>')
 
