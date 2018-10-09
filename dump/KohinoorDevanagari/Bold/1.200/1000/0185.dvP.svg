@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg height="1743" version="1.1" width="2679" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
- <path d="M0,0 l2679,0 l0,1743 l-2679,0 Z M0,0" fill="rgb(255,255,255)" transform="matrix(1,0,0,-1,0,1743)"/>
- <path d="M258,170 c117,0,182,53,217,100 l-80,93 c-28,-43,-69,-74,-117,-74 c-45,0,-67,24,-67,76 l0,197 l126,0 l0,109 l-367,0 l0,-109 l100,0 l0,-207 c0,-101,55,-185,188,-185 Z M258,170" fill="rgb(0,0,0)" transform="matrix(1,0,0,-1,571,1243)"/>
-</svg>
