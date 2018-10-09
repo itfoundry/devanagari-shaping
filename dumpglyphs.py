@@ -30,10 +30,6 @@ STROKE_WIDTH = 10 # px
 SHOW_BASELINE = False
 SHOW_ADVANCE = False
 
-# CANVAS OPTIONS
-
-LINE_HEIGHT_PERCENTAGE = 2.0
-
 def main():
 
     for font_path in get_font_paths(INPUT_PATH):
@@ -344,7 +340,7 @@ def draw_metrics(advance, origin):
                 line((0, STROKE_WIDTH/2), (0, -STROKE_WIDTH*2))
 
             save()
-            translate(g.advance, 0)
+            translate(advance, 0)
 
             if not SHOW_BASELINE:
                 line((-STROKE_WIDTH/2, 0), (STROKE_WIDTH*2, 0))
