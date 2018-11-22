@@ -1,6 +1,6 @@
-# Devanagari Shaping Documentation
+# An attempt at the shaping documentation for Devanagari
 
-https://plexus.atlassian.net/wiki/display/DSD/Devanagari+Shaping+Documentation
+Composed back in 2015 and updated in 2018.
 
 ## Dependencies of dumpglyphs.py
 
