@@ -1,6 +1,6 @@
 # An attempt at the shaping documentation for Devanagari
 
-Composed back in 2015 and updated in 2018.
+Composed back in 2015 and partially updated in 2018.
 
 ## Dependencies of dumpglyphs.py
 
