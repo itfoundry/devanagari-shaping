@@ -1,6 +1,6 @@
-# An attempt at the shaping documentation for Devanagari
+# Shaping behavior of Devanagari
 
-Composed back in 2015 and partially updated in 2018.
+A start at documentating the shaping behavior of Devanagari. A glyph set listing, an annotated feature file, and a glyph dump tool.
 
 ## Dependencies of dumpglyphs.py
 
